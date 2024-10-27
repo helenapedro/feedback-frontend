@@ -1,26 +1,24 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Routes, Route } from 'react-router-dom';
+import ResumeList from './pages/ResumeList';
+import ResumeDetails from './pages/ResumeDetails';
+import UserDetails from './pages/UserDetails';
+import ResumeUploadForm from './components/ResumeUploadForm';
+import Login from './pages/Login';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/resumes" element={<ResumeList />} />
+        <Route path="/resume/:id" element={<ResumeDetails />} />
+        <Route path="/user/:userId" element={<UserDetails />} />
+        <Route path="/upload" element={<ResumeUploadForm />} />
+      </Routes>
     </div>
   );
-}
+};
 
 export default App;
