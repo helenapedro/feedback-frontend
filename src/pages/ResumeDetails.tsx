@@ -16,11 +16,18 @@ const ResumeDetails = () => {
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [commentLoading, setCommentLoading] = useState(false);
+  const [commentSuccess, setCommentSuccess] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!id) {
+        setError('No resume ID provided');
+        setLoading(false);
+        return;
+      }
       try {
-        const response = await fetchResumeDetails(id!);
+        const response = await fetchResumeDetails(id);
         dispatch(loadResumeDetails(response.data));
         setLoading(false);
       } catch (err) {
@@ -36,12 +43,16 @@ const ResumeDetails = () => {
   const handleCommentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (resume) {
+      setCommentLoading(true);
       try {
         await addComment(resume._id.toString(), comment);
         setComment('');
+        setCommentSuccess(true);
       } catch (err) {
         console.error(err);
         setError('Failed to add comment');
+      } finally {
+        setCommentLoading(false);
       }
     }
   };
@@ -85,10 +96,14 @@ const ResumeDetails = () => {
             placeholder="Write your comment here..."
           />
         </Form.Group>
-        <Button variant="primary" type="submit">Submit</Button>
+        <Button variant="primary" type="submit" disabled={commentLoading}>
+          {commentLoading ? 'Submitting...' : 'Submit'}
+        </Button>
       </Form>
+      {commentSuccess && <div className="alert alert-success">Comment added successfully!</div>}
     </div>
   );
 };
+
 
 export default ResumeDetails;

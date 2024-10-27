@@ -51,9 +51,10 @@ const ResumeList = () => {
                 <strong>Uploaded At:</strong> {new Date(resume.createdAt).toLocaleString()}
               </Card.Text>
               {resume.format === 'pdf' ? (
-                <Worker workerUrl="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js">
+                <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.16.105/build/pdf.worker.min.js">
                   <Viewer fileUrl={resume.url} />
                 </Worker>
+              
               ) : (
                 <img src={resume.url} alt="Resume Preview" style={{ maxWidth: '100%' }} />
               )}

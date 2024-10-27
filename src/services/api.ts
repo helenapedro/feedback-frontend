@@ -18,7 +18,7 @@ export const fetchResumes = async () => {
 
 
 export const fetchResumeDetails = async (id: string) => {
-  return axios.get(`${API_URL}/resumes/${id}`, {
+  return axios.get(`${API_URL}/api/resumes/${id}`, {
     headers: {
       ...getAuthHeaders(),
     },
