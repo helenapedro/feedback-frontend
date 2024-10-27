@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../redux/userSlice';
-import { loginUser } from '../api/authApi';
+import { loginUser, registerUser } from '../api/authApi';
 import LoginForm from '../forms/loginForm';
 
 const Login = () => {
@@ -26,15 +26,7 @@ const Login = () => {
 
   const handleRegister = async (username: string, email: string, password: string) => {
     try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Registration failed');
-      }
+      await registerUser (username, email, password);
       console.log('Registration successful');
     } catch (error) {
       setError('Registration failed. Please try again.');

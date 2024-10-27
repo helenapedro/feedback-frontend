@@ -5,11 +5,8 @@ import {
   MDBTabsItem,
   MDBTabsLink,
   MDBTabsContent,
-  MDBTabsPane,
   MDBBtn,
-  MDBIcon,
   MDBInput,
-  MDBCheckbox,
 } from 'mdb-react-ui-kit';
 
 interface ILoginFormProps {
@@ -26,16 +23,11 @@ interface ILoginFormProps {
 }
 
 const LoginForm: React.FC<ILoginFormProps> = ({
-  handleLogin,
-  handleRegister,
-  email,
-  setEmail,
-  password,
-  setPassword,
-  username,
-  setUsername,
-  confirmPassword,
-  setConfirmPassword,
+  handleLogin, handleRegister,
+  email, setEmail,
+  password, setPassword,
+  username, setUsername,
+  confirmPassword, setConfirmPassword,
 }) => {
   const [justifyActive, setJustifyActive] = useState('tab1');
 
