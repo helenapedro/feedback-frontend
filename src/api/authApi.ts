@@ -41,6 +41,6 @@ export const loginUser = async (email: string, password: string) => {
   }
 };
 
-export const fetchUserDetails = async (userId: string) => {
-  return api.get(`/users/${userId}`);
+export const logoutUser = () => {
+  localStorage.removeItem(TOKEN_KEY);
 };

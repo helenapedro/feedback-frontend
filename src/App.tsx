@@ -1,5 +1,7 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { UseDispatch } from 'react-redux';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { logoutUser } from './redux/userSlice';
 
 import NavBar from './components/NavBar';
 import Login from './pages/Login';
