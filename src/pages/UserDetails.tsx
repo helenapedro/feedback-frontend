@@ -1,44 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { fetchUserDetails } from '../services/api';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { selectUserInfo } from '../redux/userSlice';
 import { IUser } from '../types';
-import { Spinner, Alert } from 'react-bootstrap';
 
 const UserDetails = () => {
-  const { userId } = useParams<{ userId: string }>();
-  const [user, setUser] = useState<IUser | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const user: IUser | null = useSelector(selectUserInfo);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetchUserDetails(userId!);
-        setUser(response.data);
-      } catch (err) {
-        console.error(err);
-        setError('Failed to load user details');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [userId]);
-
-  if (loading) {
-    return <Spinner animation="border" />;
-  }
-
-  if (error) {
-    return <Alert variant="danger">{error}</Alert>;
+  if (!user) {
+    return <div>No user details available.</div>;
   }
 
   return (
     <div>
       <h2>User Details</h2>
-      <p><strong>Name:</strong> {user?.username}</p>
-      <p><strong>Email:</strong> {user?.email}</p>
+      <ul>
+        <li><strong>ID:</strong> {user._id.toString()}</li>
+        <li><strong>Username:</strong> {user.username}</li>
+        <li><strong>Email:</strong> {user.email}</li>
+        {/* <li><strong>Admin:</strong> {user.isAdmin ? 'Yes' : 'No'}</li>
+        <li><strong>Created At:</strong> {user.createdAt.toString()}</li>
+        <li><strong>Updated At:</strong> {user.updatedAt.toString()}</li> */}
+      </ul>
     </div>
   );
 };

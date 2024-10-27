@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { loginUser as apiLoginUser, logoutUser as apiLogoutUser } from '../api/authApi';
+import { loginUser as apiLoginUser} from '../api/authApi';
 import { IUser } from '../types'; 
 import { RootState } from './store';
 import mongoose from 'mongoose';
@@ -7,7 +7,8 @@ import mongoose from 'mongoose';
 interface UserState {
   isLoggedIn: boolean;
   userId: string | mongoose.Types.ObjectId | null;
-  user: IUser | null; 
+  user: IUser | null;
+  updateUserStatus: string, 
   loading: boolean;
   error: string | null;
 }
@@ -16,6 +17,7 @@ const initialState: UserState = {
   isLoggedIn: false,
   userId: null,
   user: null, 
+  updateUserStatus: 'idle',
   loading: false,
   error: null,
 };
@@ -26,6 +28,15 @@ const userSlice = createSlice({
   reducers: {
     updateUser: (state, action: PayloadAction<IUser>) => {
       state.user = action.payload; 
+    },
+    resetUpdateStatus(state) {
+      state.updateUserStatus = 'idle';
+    },
+    logoutUser: (state) => {
+      state.isLoggedIn = false;
+      state.userId = null;
+      state.user = null;
+      localStorage.removeItem('authToken'); 
     },
   },
   extraReducers: (builder) => {
@@ -45,16 +56,6 @@ const userSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
-      .addCase(logoutUser.fulfilled, (state) => {
-        state.isLoggedIn = false;
-        state.userId = null;
-        state.user = null;
-        state.loading = false;
-        state.error = null;
-      })
-      .addCase(logoutUser.rejected, (state, action) => {
-        state.error = action.payload as string;
-      });
     },
   });
 
@@ -71,18 +72,9 @@ const userSlice = createSlice({
     }
   });
 
-  export const logoutUser = createAsyncThunk('user/logoutUser', async (_, { rejectWithValue }) => {
-    try {
-      await apiLogoutUser();
-      localStorage.removeItem('authToken');
-    } catch (error) {
-      return rejectWithValue('Logout failed.');
-    }
-  });
 
-// Selectors
 export const selectIsAuthenticated = (state: RootState) => !!state.user.isLoggedIn && !!localStorage.getItem('authToken');
 export const selectUserInfo = (state: RootState) => state.user.user;
 
-export const { updateUser } = userSlice.actions;
+export const { updateUser, resetUpdateStatus, logoutUser } = userSlice.actions;
 export default userSlice.reducer;

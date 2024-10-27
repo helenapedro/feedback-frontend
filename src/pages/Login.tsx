@@ -29,7 +29,7 @@ const Login = () => {
         localStorage.setItem('authToken', resultAction.token); 
         if (resultAction.user && resultAction.user._id) {
           dispatch(updateUser(resultAction.user)); 
-          navigate('/resumes'); 
+          navigate('/user/:userId'); 
         }
       }
     } catch (error) {

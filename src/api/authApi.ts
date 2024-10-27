@@ -40,8 +40,3 @@ export const loginUser = async (email: string, password: string) => {
     }
   }
 };
-
-export const logoutUser = async () => {
-  localStorage.removeItem(TOKEN_KEY);
-  return api.post('/api/auth/logout');
-};
