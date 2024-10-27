@@ -12,8 +12,6 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-  
-  
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const loading = useSelector((state: RootState) => state.user.loading);
@@ -27,10 +25,8 @@ const Login = () => {
       
       if (resultAction.user) {
         localStorage.setItem('authToken', resultAction.token); 
-        if (resultAction.user && resultAction.user._id) {
-          dispatch(updateUser(resultAction.user)); 
-          navigate('/user/:userId'); 
-        }
+        
+        navigate('/resumes'); 
       }
     } catch (error) {
       console.error('Login error:', loginError);
