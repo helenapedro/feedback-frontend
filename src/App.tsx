@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
+import CustomNavbar from './components/NavBar';
 import Login from './pages/Login';
 import ResumeList from './pages/ResumeList';
 import ResumeDetails from './pages/ResumeDetails';
@@ -11,6 +12,7 @@ import ResumeDetails from './pages/ResumeDetails';
 const App = () => {
   return (
     <div className="app">
+      <CustomNavbar />
       <Routes>
       <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
