@@ -5,7 +5,7 @@ import { fetchResumes } from '../services/api';
 import { loadResumes, setLoading, setError } from '../redux/resumeSlice'; 
 import { Card, Button, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { Worker, Viewer } from '@react-pdf-viewer/core';
+import { Worker, Viewer, VisiblePagesRange } from '@react-pdf-viewer/core';
 
 const ResumeList = () => {
   const dispatch = useDispatch();
@@ -50,17 +50,21 @@ const ResumeList = () => {
               <Card.Text>
                 <strong>Uploaded At:</strong> {new Date(resume.createdAt).toLocaleString()}
               </Card.Text>
+              <Link to={`/resume/${resume._id}`}>
+                <Button variant="primary">View Details</Button>
+              </Link>
               {resume.format === 'pdf' ? (
-                <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.16.105/build/pdf.worker.min.js">
-                  <Viewer fileUrl={resume.url} />
+                <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
+                  <Viewer 
+                    fileUrl={resume.url} 
+                    setRenderRange={(visiblePagesRange: VisiblePagesRange)=>{return {endPage:0, startPage:0}}} 
+                  />
                 </Worker>
               
               ) : (
                 <img src={resume.url} alt="Resume Preview" style={{ maxWidth: '100%' }} />
               )}
-              <Link to={`/resume/${resume._id}`}>
-                <Button variant="primary">View Details</Button>
-              </Link>
+              
             </Card.Body>
           </Card>
         ))
