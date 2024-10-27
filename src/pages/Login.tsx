@@ -17,7 +17,11 @@ const Login = () => {
   const handleLogin = async (email: string, password: string) => {
     try {
       const response = await loginUser(email, password);
-      dispatch(login(response.data.userId));
+      const { token, user } = response.data;
+      const TOKEN_KEY = 'authToken'; 
+
+      localStorage.setItem(TOKEN_KEY, token);
+      dispatch(login({ userId: user.id, user }));
       navigate('/resumes');
     } catch (err) {
       setError('Login failed. Please check your credentials.');

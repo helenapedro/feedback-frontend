@@ -20,8 +20,8 @@ const userSlice = createSlice({
     login: (state, action: PayloadAction<{ userId: string; user: IUser }>) => {
       state.isLoggedIn = true;
       state.userId = action.payload.userId;
-      state.user = action.payload.user; 
-    },
+      state.user = action.payload.user;
+    },    
     logout: (state) => {
       state.isLoggedIn = false;
       state.userId = null;

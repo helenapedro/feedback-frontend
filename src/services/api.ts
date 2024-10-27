@@ -7,7 +7,7 @@ export const fetchUserDetails = async (userId: string) => {
 };
 
 export const fetchResumes = async () => {
-  return axios.get(`${API_URL}/resumes`);
+  return axios.get(`${API_URL}/api/resumes`);
 };
 
 export const fetchResumeDetails = async (id: string) => {
