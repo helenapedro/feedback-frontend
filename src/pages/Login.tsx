@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../api/authApi';
-import { loginUserAsync, updateUser } from '../redux/userSlice';
+import { loginUserAsync } from '../redux/userSlice';
 import LoginForm from '../forms/loginForm';
 import { RootState, AppDispatch } from '../redux/store';
 
