@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import { IUser } from '../types';
 
 const API_URL = process.env.REACT_APP_API_URL;
 const TOKEN_KEY = 'authToken';
@@ -18,18 +19,18 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-export const fetchUserDetails = async (userId: string) => {
-     return api.get(`/api/users/${userId}`);
-   };
-   
+export const fetchUserDetails = async (userId: string): Promise<AxiosResponse<IUser>> => {
+  return api.get(`/api/users/${userId}`);
+};
+
 export const updateUserDetails = async (userId: string, data: { username?: string; email?: string }) => {
-return api.put(`/api/users/${userId}`, data);
+  return api.put(`/api/users/${userId}`, data);
 };
 
 export const updateUserPassword = async (userId: string, currentPassword: string, newPassword: string) => {
-return api.put(`/api/users/${userId}/password`, { currentPassword, newPassword });
+  return api.put(`/api/users/${userId}/password`, { currentPassword, newPassword });
 };
 
-export const deleteUserAccount = async (userId: string) => {
-return api.delete(`/api/users/${userId}`);
+export const deleteUserAccount = async (userId: string): Promise<AxiosResponse<void>> => {
+  return api.delete(`/api/users/${userId}`);
 };
