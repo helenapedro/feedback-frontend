@@ -8,7 +8,16 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFilePdf, faBars, faSignIn, faInfoCircle, faUser, faFileAlt, faSignOutAlt, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { 
+  faFilePdf, 
+  faBars, 
+  faSignIn, 
+  faInfoCircle, 
+  faUser, 
+  faFileAlt, 
+  faSignOutAlt, 
+  faUserPlus 
+} from '@fortawesome/free-solid-svg-icons';
 //import OffcanvasMenu from '../utils/OffcanvasMenu';
 
 function CustomNavbar() {
