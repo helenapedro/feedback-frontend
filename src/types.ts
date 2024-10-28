@@ -20,7 +20,8 @@ export interface IResume {
 }
 
 export interface IComment {
-  _id: mongoose.Types.ObjectId; 
+  _id: string; 
+  //_id: mongoose.Types.ObjectId; 
   resumeId: mongoose.Types.ObjectId; 
   commenterId: mongoose.Types.ObjectId; 
   content: string; 

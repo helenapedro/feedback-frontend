@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { loginUser as apiLoginUser } from '../api/authApi';
-import { fetchUserDetails, updateUserDetails, updateUserPassword } from '../api/userApi';
-import { fetchAllUsers, deactivateUser } from '../api/adminApi';
+import * as userapi from '../api/userApi';
+import * as adminapi from '../api/adminApi';
 import { IUser } from '../types';
 import { RootState } from './store';
 import mongoose from 'mongoose';
@@ -143,7 +143,7 @@ export const fetchUserDetailsAsync = createAsyncThunk<IUser, string, { rejectVal
   'user/fetchUserDetails',
   async (userId, { rejectWithValue }) => {
     try {
-      const response = await fetchUserDetails(userId);
+      const response = await userapi.fetchUserDetails(userId);
       return response.data;
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || 'Failed to fetch user details.';
@@ -159,7 +159,7 @@ export const updateUserDetailsAsync = createAsyncThunk<
   { rejectValue: string }>
   ('user/updateUserDetails', async ({ userId, data }, { rejectWithValue }) => {
     try {
-      const response = await updateUserDetails(userId, data);
+      const response = await userapi.updateUserDetails(userId, data);
       return response.data;
     } catch (error) {
       return rejectWithValue('Failed to update user details.');
@@ -173,7 +173,7 @@ export const updateUserPasswordAsync = createAsyncThunk<
   { rejectValue: string }>
   ('user/updateUserPassword', async ({ userId, currentPassword, newPassword }, { rejectWithValue }) => {
     try {
-      await updateUserPassword(userId, currentPassword, newPassword);
+      await userapi.updateUserPassword(userId, currentPassword, newPassword);
     } catch (error) {
       return rejectWithValue('Failed to update password.');
     }
@@ -185,7 +185,7 @@ export const fetchAllUsersAsync = createAsyncThunk<IUser[], void, { rejectValue:
   'user/fetchAllUsers',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetchAllUsers();
+      const response = await adminapi.fetchAllUsers();
       return response.data;
     } catch (error) {
       return rejectWithValue('Failed to fetch users.');
@@ -199,7 +199,7 @@ export const deactivateUserAsync = createAsyncThunk<
   { rejectValue: string }>
   ('user/deactivateUser', async (userId, { rejectWithValue }) => {
     try {
-      await deactivateUser(userId);
+      await adminapi.deactivateUser(userId);
     } catch (error) {
       return rejectWithValue('Failed to deactivate user.');
     }

@@ -1,35 +1,37 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { addComment } from '../services/api'; 
-import { loadComments } from '../redux/commentSlice'; 
+import { useDispatch, useSelector } from 'react-redux';
+import { addCommentAsync, fetchCommentsAsync } from '../redux/commentSlice';
 import { Button, Form, Spinner } from 'react-bootstrap';
+import { RootState, AppDispatch } from '../redux/store';
 
 interface CommentFormProps {
-  resumeId: string; 
+  resumeId: string;
 }
 
 const CommentForm: React.FC<CommentFormProps> = ({ resumeId }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const [comment, setComment] = useState('');
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const loading = useSelector((state: RootState) => state.comments.loading);
+  const addError = useSelector((state: RootState) => state.comments.error);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!comment) {
-      setError('Please write a comment');
+
+    if (!comment.trim()) {
+      alert('Please write a comment');
       return;
     }
-    setLoading(true);
+
     try {
-      const response = await addComment(resumeId, comment);
-      dispatch(loadComments(response.data)); 
+      await dispatch(addCommentAsync({ resumeId, content: comment })).unwrap();
+      dispatch(fetchCommentsAsync(resumeId));
       setComment('');
-      setLoading(false);
+      setError(''); 
     } catch (err) {
-      console.error(err);
+      console.error('Failed to add comment');
       setError('Failed to add comment');
-      setLoading(false);
     }
   };
 
@@ -49,6 +51,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ resumeId }) => {
         {loading ? <Spinner animation="border" size="sm" /> : 'Submit'}
       </Button>
       {error && <div className="text-danger">{error}</div>}
+      {addError && <div className="text-danger">{addError}</div>}
     </Form>
   );
 };
