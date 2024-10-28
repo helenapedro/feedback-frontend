@@ -7,53 +7,53 @@ const getAuthHeaders = () => {
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
-export const fetchResumes = async () => {
+export const fetchResumes = async (page: number = 1, limit: number = 10) => {
   const response = await axios.get(`${API_URL}/api/resumes`, {
-    headers: {
-      ...getAuthHeaders(),
-    },
+    headers: { ...getAuthHeaders() },
+    params: { page, limit },
   });
-  return response.data.resumes;
+  return response.data;
 };
 
 export const fetchResumeDetails = async (id: string) => {
-  return axios.get(`${API_URL}/api/resumes/${id}`, {
-    headers: {
-      ...getAuthHeaders(),
-    },
+  const response = await axios.get(`${API_URL}/api/resumes/${id}`, {
+    headers: { ...getAuthHeaders() },
   });
+  return response.data;
 };
 
 export const uploadResume = async (file: File, format: string) => {
   const formData = new FormData();
-  formData.append('resume', file);  
+  formData.append('resume', file);
   formData.append('format', format);
 
-  return axios.post(`${API_URL}/resumes/upload`, formData, {
-    headers: { 
-      'Content-Type': 'multipart/form-data',
-      ...getAuthHeaders(), 
-    },
-  });
-};
-
-export const addComment = async (resumeId: string, content: string) => {
-  return axios.post(`${API_URL}/comments/add`, { resumeId, content }, {
-    headers: { ...getAuthHeaders() }, 
-  });
-};
-
-export const fetchCommentsByResume = async (resumeId: string) => {
-  const response = await axios.get(`${API_URL}/comments/${resumeId}`, {
+  const response = await axios.post(`${API_URL}/api/resumes/upload`, formData, {
     headers: {
+      'Content-Type': 'multipart/form-data',
       ...getAuthHeaders(),
     },
   });
-  return response.data; 
+  return response.data;
 };
 
+export const fetchCommentsByResume = async (resumeId: string) => {
+  const response = await axios.get(`${API_URL}/api/comments/${resumeId}`, {
+    headers: { ...getAuthHeaders() },
+  });
+  return response.data;
+};
+
+
+export const addComment = async (resumeId: string, content: string) => {
+  const response = await axios.post(`${API_URL}/api/comments/add`, { resumeId, content }, {
+    headers: { ...getAuthHeaders() },
+  });
+  return response.data;
+};
+
+
 export const updateComment = async (commentId: string, content: string) => {
-  return axios.put(`${API_URL}/comments/comments/${commentId}`, { content }, {
+  return axios.put(`${API_URL}/api/comments/${commentId}`, { content }, {
     headers: {
       ...getAuthHeaders(),
     },
@@ -61,7 +61,7 @@ export const updateComment = async (commentId: string, content: string) => {
 };
 
 export const deleteComment = async (commentId: string) => {
-  return axios.delete(`${API_URL}/comments/comments/${commentId}`, {
+  return axios.delete(`${API_URL}/api/comments/${commentId}`, {
     headers: {
       ...getAuthHeaders(),
     },

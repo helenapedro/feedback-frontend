@@ -1,19 +1,26 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { uploadResume } from '../services/api';
-import { addResume } from '../redux/resumeSlice'; 
+import type { AppDispatch } from '../redux/store';
+import { uploadResumeAsync } from '../redux/resumeSlice';
 import { Button, Form, Spinner } from 'react-bootstrap';
 
 const ResumeUploadForm = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const [file, setFile] = useState<File | null>(null);
   const [format, setFormat] = useState('pdf'); 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; 
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setFile(e.target.files[0]);
+      const selectedFile = e.target.files[0];
+      if (selectedFile.size > MAX_FILE_SIZE) {
+        setError('File size exceeds the 5 MB limit');
+        return;
+      }
+      setFile(selectedFile);
     }
   };
 
@@ -25,14 +32,13 @@ const ResumeUploadForm = () => {
     }
     setLoading(true);
     try {
-      const response = await uploadResume(file, format);
-      dispatch(addResume(response.data)); 
+      await dispatch(uploadResumeAsync({ file, format })).unwrap();
       setFile(null);
       setFormat('pdf'); 
-      setLoading(false);
     } catch (err) {
       console.error(err);
       setError('Upload failed');
+    } finally {
       setLoading(false);
     }
   };

@@ -1,34 +1,23 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
-import { fetchResumes } from '../services/api';
-import { loadResumes, setLoading, setError } from '../redux/resumeSlice'; 
+import { RootState, AppDispatch } from '../redux/store';
+import { fetchResumesAsync } from '../redux/resumeSlice';
 import { Card, Button, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Worker, Viewer, VisiblePagesRange } from '@react-pdf-viewer/core';
+import '@react-pdf-viewer/core/lib/styles/index.css';
 
 const ResumeList = () => {
-  const dispatch = useDispatch();
-  const { data: resumes = [], loading, error } = useSelector((state: RootState) => state.resumes);
-
+  const dispatch = useDispatch<AppDispatch>();
+  const { data: resumesData, loading, error } = useSelector((state: RootState) => state.resumes);
+  
   useEffect(() => {
-    const fetchData = async () => {
-      dispatch(setLoading(true)); 
-      try {
-        const resumes = await fetchResumes();
-        console.log('Fetched resumes:', resumes);
-        dispatch(loadResumes(resumes));
-      } catch (err: any) {
-        dispatch(setError(err.message)); 
-        console.error('Error fetching resumes:', err);
-      } finally {
-        dispatch(setLoading(false)); 
-      }
-    };
-    fetchData();
+    dispatch(fetchResumesAsync());
   }, [dispatch]);
+  
+  console.log('Current resumes:', resumesData); 
 
-  console.log('Resumes from state:', resumes);
+  const resumes = resumesData?.resumes || []; 
 
   if (loading) {
     return <Spinner animation="border" />;
@@ -64,7 +53,6 @@ const ResumeList = () => {
               ) : (
                 <img src={resume.url} alt="Resume Preview" style={{ maxWidth: '100%' }} />
               )}
-              
             </Card.Body>
           </Card>
         ))
