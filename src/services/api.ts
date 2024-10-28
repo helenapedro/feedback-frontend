@@ -29,7 +29,6 @@ export const uploadResume = async (file: File, format: string) => {
 
   const response = await axios.post(`${API_URL}/api/resumes/upload`, formData, {
     headers: {
-      'Content-Type': 'multipart/form-data',
       ...getAuthHeaders(),
     },
   });

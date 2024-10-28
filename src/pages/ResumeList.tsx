@@ -14,8 +14,6 @@ const ResumeList = () => {
   useEffect(() => {
     dispatch(fetchResumesAsync());
   }, [dispatch]);
-  
-  console.log('Current resumes:', resumesData); 
 
   const resumes = resumesData?.resumes || []; 
 
@@ -29,6 +27,10 @@ const ResumeList = () => {
 
   return (
     <div className="resume-list">
+      <Link to="/upload">
+        <Button variant="primary" className="mb-3">Upload New Resume</Button>
+      </Link>
+
       {resumes.length === 0 ? (
         <p>No resumes found.</p>
       ) : (
