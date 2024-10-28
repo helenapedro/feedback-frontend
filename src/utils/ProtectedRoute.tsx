@@ -1,16 +1,16 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
+import { Navigate, Outlet } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
-interface PrivateWrapperProps {
-  children: JSX.Element;
+interface ProtectedRouteProps {
+  element: JSX.Element;
 }
 
-const PrivateWrapper: React.FC<PrivateWrapperProps> = ({ children }) => {
-  const { isAuthenticated } = useAuth();
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element }) => {
+  const isAuthenticated = useSelector((state: RootState) => state.user.isLoggedIn);
 
-  // Render children if authenticated; otherwise, redirect to login
-  return isAuthenticated ? children : <Navigate to="/login" replace />;
+  return isAuthenticated ? element : <Navigate to="/login" />;
 };
 
-export default PrivateWrapper;
+export default ProtectedRoute;

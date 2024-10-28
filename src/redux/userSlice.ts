@@ -126,14 +126,16 @@ const userSlice = createSlice({
 export const loginUserAsync = createAsyncThunk<
   { token: string; user: IUser }, 
   { email: string; password: string },
-  { rejectValue: string }>
-  ('user/loginUser', async ({ email, password }, { rejectWithValue }) => {
-    try {
-      const response = await apiLoginUser(email, password);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue('Login failed. Please check your credentials.');
-    }
+  { rejectValue: string }
+  >(
+    'user/loginUser', 
+    async ({ email, password }, { rejectWithValue }) => {
+      try {
+        const response = await apiLoginUser(email, password);
+        return response.data;
+      } catch (error: any) {
+        return rejectWithValue('Login failed. Please check your credentials.');
+      }
   }
 );
 
@@ -143,11 +145,13 @@ export const fetchUserDetailsAsync = createAsyncThunk<IUser, string, { rejectVal
     try {
       const response = await fetchUserDetails(userId);
       return response.data;
-    } catch (error) {
-      return rejectWithValue('Failed to fetch user details.');
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Failed to fetch user details.';
+      return rejectWithValue(errorMessage);
     }
   }
 );
+
 
 export const updateUserDetailsAsync = createAsyncThunk<
   IUser,
@@ -203,7 +207,7 @@ export const deactivateUserAsync = createAsyncThunk<
 );
 
 
-export const selectIsAuthenticated = (state: RootState) => !!state.user.isLoggedIn && !!localStorage.getItem('authToken');
+export const selectIsAuthenticated = (state: RootState) => state.user.isLoggedIn;
 export const selectUserInfo = (state: RootState) => state.user.user;
 export const selectAdminUsers = (state: RootState) => state.user.users;
 
