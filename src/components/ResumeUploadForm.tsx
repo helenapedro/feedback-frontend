@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import type { AppDispatch } from '../redux/store';
 import { uploadResumeAsync } from '../redux/resumeSlice';
 import { Button, Form, Spinner } from 'react-bootstrap';
 
 const ResumeUploadForm = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const [file, setFile] = useState<File | null>(null);
   const [format, setFormat] = useState('pdf'); 
   const [loading, setLoading] = useState(false);
@@ -33,6 +35,7 @@ const ResumeUploadForm = () => {
     setLoading(true);
     try {
       await dispatch(uploadResumeAsync({ file, format })).unwrap();
+      navigate('/resumes');
       setFile(null);
       setFormat('pdf'); 
     } catch (err) {
