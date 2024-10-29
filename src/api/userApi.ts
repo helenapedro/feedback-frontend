@@ -23,14 +23,14 @@ export const fetchUserDetails = async (userId: string): Promise<AxiosResponse<IU
   return api.get(`/api/auth/user/${userId}`);
 };
 
-export const updateUserDetails = async (userId: string, data: { username?: string; email?: string }) => {
-  return api.put(`/api/auth/user/${userId}`, data);
+export const updateUserDetails = async (data: { username?: string; email?: string }): Promise<AxiosResponse<IUser>> => {
+  return api.put(`/api/auth/user/update`, data);
 };
 
-export const updateUserPassword = async (userId: string, currentPassword: string, newPassword: string) => {
-  return api.post(`/api/auth/user/${userId}/password`, { currentPassword, newPassword });
+export const updateUserPassword = async (data: { currentPassword: string; newPassword: string }): Promise<AxiosResponse<void>> => {
+  return api.post(`/api/auth/user/change-password`, data);
 };
 
-export const deleteUserAccount = async (userId: string): Promise<AxiosResponse<void>> => {
-  return api.delete(`/api/auth/user/${userId}`);
+export const deleteUserAccount = async (): Promise<AxiosResponse<void>> => {
+  return api.delete(`/api/auth/user/delete`);
 };

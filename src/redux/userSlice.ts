@@ -155,13 +155,15 @@ export const fetchUserDetailsAsync = createAsyncThunk<IUser, string, { rejectVal
 
 export const updateUserDetailsAsync = createAsyncThunk<
   IUser,
-  { userId: string; data: { username?: string; email?: string } },
-  { rejectValue: string }>
-  ('user/updateUserDetails', async ({ userId, data }, { rejectWithValue }) => {
+  { data: { username?: string; email?: string } },
+  { rejectValue: string }
+>(
+  'user/updateUserDetails', 
+  async ({ data }, { rejectWithValue }) => {
     try {
-      const response = await userapi.updateUserDetails(userId, data);
+      const response = await userapi.updateUserDetails(data);
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue('Failed to update user details.');
     }
   }
@@ -169,16 +171,19 @@ export const updateUserDetailsAsync = createAsyncThunk<
 
 export const updateUserPasswordAsync = createAsyncThunk<
   void,
-  { userId: string; currentPassword: string; newPassword: string },
-  { rejectValue: string }>
-  ('user/updateUserPassword', async ({ userId, currentPassword, newPassword }, { rejectWithValue }) => {
+  { currentPassword: string; newPassword: string },
+  { rejectValue: string }
+>(
+  'user/updateUserPassword', 
+  async ({ currentPassword, newPassword }, { rejectWithValue }) => {
     try {
-      await userapi.updateUserPassword(userId, currentPassword, newPassword);
-    } catch (error) {
+      await userapi.updateUserPassword({ currentPassword, newPassword });
+    } catch (error: any) {
       return rejectWithValue('Failed to update password.');
     }
   }
 );
+
 
 // Admin actions
 export const fetchAllUsersAsync = createAsyncThunk<IUser[], void, { rejectValue: string }>(
