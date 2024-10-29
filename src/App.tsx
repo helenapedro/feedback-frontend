@@ -40,11 +40,11 @@ const App: React.FC = () => {
         <Route path="/resumes" element={<ResumeList />} />
         <Route path="/resume/:id" element={<ResumeDetails />} />
         <Route path="/upload" element={<ResumeUploadForm />} />
+        <Route path="/logout" element={<ProtectedRoute element={<Logout />}/>} />
         {/* <Route path="/resumes" element={<ProtectedRoute element={<ResumesLayout />} />}>
           <Route index element={<ResumeList />} />
           <Route path="resume/:id" element={<ResumeDetails />} />
         </Route> */}
-        <Route path="/logout" element={<ProtectedRoute element={<Logout />}/>} />
       </Routes>
     </Router>
   );

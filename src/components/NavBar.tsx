@@ -31,7 +31,7 @@ function CustomNavbar() {
       <Navbar bg="primary" expand="lg" variant="dark" className="mb-3">
         <Container fluid>
           <Navbar.Brand as={Link} to={isAuthenticated ? "/resumes" : "/"}>
-            <FontAwesomeIcon icon={faFileAlt} /> Resume Feedback
+            <FontAwesomeIcon icon={faFileAlt} style={{ marginRight: '8px' }} /> Resume Feedback
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={handleShow}>
             <FontAwesomeIcon icon={faBars} style={{ color: 'white' }} />

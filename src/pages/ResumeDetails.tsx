@@ -41,29 +41,6 @@ const ResumeDetails: React.FC = () => {
       <h2>Resume Details</h2>
       <p><strong>Format:</strong> {resume.format}</p>
       <p><strong>Uploaded At:</strong> {new Date(resume.createdAt).toLocaleString()}</p>
-
-      <h3>Add Comment</h3>
-      <Form onSubmit={handleCommentSubmit}>
-        <Form.Group controlId="comment">
-          <Form.Control
-            as="textarea"
-            rows={3}
-            value={commentText}
-            onChange={(e) => setCommentText(e.target.value)}
-            placeholder="Write your comment here..."
-          />
-        </Form.Group>
-        <Button variant="primary" type="submit" disabled={loading}>
-          {loading ? <Spinner animation="border" size="sm" /> : 'Submit'}
-        </Button>
-      </Form>
-      {error && <div className="text-danger">{error}</div>}
-
-      <h3>Comments</h3>
-      {comments.map((comment) => (
-        <div key={comment._id}>{comment.content}</div>
-      ))}
-
       {resume.format === 'pdf' ? (
         <div style={{ height: '750px', border: '1px solid #ccc' }}>
           <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js`}>
@@ -79,6 +56,37 @@ const ResumeDetails: React.FC = () => {
         </div> */
       ) : (
         <p><strong>URL:</strong> <a href={resume.url} target="_blank" rel="noopener noreferrer">{resume.url}</a></p>
+      )}
+
+<h3 style={{ marginTop: '2rem' }}>Add Comment</h3>
+      <Form onSubmit={handleCommentSubmit}>
+        <Form.Group controlId="comment">
+          <Form.Control
+            as="textarea"
+            rows={3}
+            value={commentText}
+            onChange={(e) => setCommentText(e.target.value)}
+            placeholder="Write your comment here..."
+          />
+        </Form.Group>
+        <Button 
+          variant="primary" 
+          type="submit" 
+          disabled={loading} 
+          style={{ marginTop: '1rem' }}
+        >
+          {loading ? <Spinner animation="border" size="sm" /> : 'Submit'}
+        </Button>
+      </Form>
+      {error && <div className="text-danger">{error}</div>}
+
+      <h3>Comments</h3>
+      {comments && comments.length > 0 ? (
+        comments.map((comment) => (
+          <div key={comment._id}>{comment.content}</div>
+        ))
+      ) : (
+        <p>No comments available.</p>
       )}
     </div>
   );
