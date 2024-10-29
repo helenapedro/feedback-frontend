@@ -35,6 +35,9 @@ const userSlice = createSlice({
     updateUser: (state, action: PayloadAction<IUser>) => {
       state.user = action.payload;
     },
+    setUser: (state, action: PayloadAction<IUser>) => {
+      state.user = action.payload;
+    },
     resetUpdateStatus(state) {
       state.updateUserStatus = 'idle';
     },
@@ -216,5 +219,5 @@ export const selectIsAuthenticated = (state: RootState) => state.user.isLoggedIn
 export const selectUserInfo = (state: RootState) => state.user.user;
 export const selectAdminUsers = (state: RootState) => state.user.users;
 
-export const { updateUser, resetUpdateStatus, logoutUser } = userSlice.actions;
+export const { updateUser,setUser, resetUpdateStatus, logoutUser } = userSlice.actions;
 export default userSlice.reducer;
