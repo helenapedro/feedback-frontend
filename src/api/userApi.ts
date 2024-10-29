@@ -20,17 +20,17 @@ api.interceptors.request.use((config) => {
 });
 
 export const fetchUserDetails = async (userId: string): Promise<AxiosResponse<IUser>> => {
-  return api.get(`/api/users/${userId}`);
+  return api.get(`/api/auth/user/${userId}`);
 };
 
 export const updateUserDetails = async (userId: string, data: { username?: string; email?: string }) => {
-  return api.put(`/api/users/${userId}`, data);
+  return api.put(`/api/auth/user/${userId}`, data);
 };
 
 export const updateUserPassword = async (userId: string, currentPassword: string, newPassword: string) => {
-  return api.put(`/api/users/${userId}/password`, { currentPassword, newPassword });
+  return api.post(`/api/auth/user/${userId}/password`, { currentPassword, newPassword });
 };
 
 export const deleteUserAccount = async (userId: string): Promise<AxiosResponse<void>> => {
-  return api.delete(`/api/users/${userId}`);
+  return api.delete(`/api/auth/user/${userId}`);
 };

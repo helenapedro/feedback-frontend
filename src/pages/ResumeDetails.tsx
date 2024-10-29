@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import { Button, Form, Spinner } from 'react-bootstrap';
 import { Worker, Viewer } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
+import DocViewer, { DocViewerRenderers } from 'react-doc-viewer';
 
 const ResumeDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -69,6 +70,13 @@ const ResumeDetails: React.FC = () => {
             <Viewer fileUrl={resume.url} />
           </Worker>
         </div>
+      /* ) : resume.format === 'docx' ? (
+        <div style={{ height: '750px', border: '1px solid #ccc' }}>
+          <DocViewer 
+            documents={[{ uri: resume.url }]} 
+            pluginRenderers={DocViewerRenderers} 
+          />
+        </div> */
       ) : (
         <p><strong>URL:</strong> <a href={resume.url} target="_blank" rel="noopener noreferrer">{resume.url}</a></p>
       )}
