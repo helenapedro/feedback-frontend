@@ -1,34 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../redux/store';
 import { fetchResumesAsync } from '../redux/resumeSlice';
 import { Link } from 'react-router-dom';
 import * as style from 'react-bootstrap/';
 import { Worker, Viewer, PageLayout, Rect, SpecialZoomLevel } from '@react-pdf-viewer/core';
+import Pagination from '../utils/Pagination';
+import SearchForm from '../forms/SearchForm';
 import '@react-pdf-viewer/core/lib/styles/index.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
 
 const ResumeList = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { data: resumesData, loading, error } = useSelector((state: RootState) => state.resumes);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchDate, setSearchDate] = useState('');
-  
-  const handleSearch = () => {
-    dispatch(fetchResumesAsync({
-      page: 1,
-      limit: 10,
-      format: searchQuery,
-      createdAt: searchDate
-    }));
+
+  const handleSearch = (format: string, createdAt: string) => {
+    dispatch(fetchResumesAsync({ page: 1, limit: 10, format, createdAt }));
   };
-  
+
   useEffect(() => {
     dispatch(fetchResumesAsync({ page: currentPage, limit: 10 }));
   }, [dispatch, currentPage]);
-  
+
   const resumes = resumesData?.resumes || []; 
   const totalPages = resumesData?.totalPages || 1;
 
@@ -45,36 +38,21 @@ const ResumeList = () => {
       padding: 0,
     }),
     transformSize: ({ pageIndex, size }: { pageIndex: number, size: Rect }) => {
-      return pageIndex === 0
-        ? size
-        : { height: 0, width: 0 };
+      return pageIndex === 0 ? size : { height: 0, width: 0 };
     },
   };
 
   if (loading) return <style.Spinner animation="border" />;
-
   if (error) return <div>Error fetching resumes: {error}</div>;
 
   return (
     <style.Container>
       <style.Card>
         <style.CardBody>
-        <Link to="/upload" >
-          <style.Button variant="primary" className="mb-3">Upload New Resume</style.Button>
-        </Link>
-        <style.Form className="d-flex" onSubmit={(e) => e.preventDefault()} >
-          <style.Form.Control
-            type="text"
-            placeholder="Search by format"
-            className="me-2"
-            aria-label="Search by format"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <style.Button variant="outline-light" onClick={handleSearch} style={{ color: '#007acc'}}>
-            <FontAwesomeIcon icon={faBars} /> Search
-          </style.Button>
-        </style.Form>
+          <Link to="/upload">
+            <style.Button variant="primary" className="mb-3">Upload New Resume</style.Button>
+          </Link>
+          <SearchForm onSearch={handleSearch} />
         </style.CardBody>
       </style.Card>
       <br />
@@ -85,18 +63,11 @@ const ResumeList = () => {
           <style.Card key={resume._id.toString()} className="mb-3">
             <style.Card.Body>
               <Link to={`/resume/${resume._id}`}>
-                <style.Button 
-                  variant="primary" 
-                  style={{ marginBottom: '8px' }}>View Details
-                </style.Button>
+                <style.Button variant="primary" style={{ marginBottom: '8px' }}>View Details</style.Button>
               </Link>
               {resume.format === 'pdf' ? (
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
-                  <Viewer 
-                    fileUrl={resume.url} 
-                    defaultScale={SpecialZoomLevel.PageWidth} 
-                    pageLayout={pageLayout} 
-                  />
+                  <Viewer fileUrl={resume.url} defaultScale={SpecialZoomLevel.PageWidth} pageLayout={pageLayout} />
                 </Worker>
               ) : (
                 <img src={resume.url} alt="Resume Preview" style={{ maxWidth: '100%', backgroundColor: '#007acc' }} />
@@ -105,18 +76,7 @@ const ResumeList = () => {
           </style.Card>
         ))
       )}
-
-      <style.Pagination className="mt-3" style={{ marginLeft: '12px' }}>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <style.Pagination.Item
-            key={index + 1}
-            active={index + 1 === currentPage}
-            onClick={() => handlePageChange(index + 1)}
-          >
-            {index + 1}
-          </style.Pagination.Item>
-        ))}
-      </style.Pagination>
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
     </style.Container>
   );
 };
