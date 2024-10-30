@@ -54,9 +54,9 @@ function CustomNavbar() {
             <Nav className="me-auto">
               {!isAuthenticated ? (
                 <>
-                  <Nav.Link as={Link} to="/about">
+                 {/*  <Nav.Link as={Link} to="/about">
                     <FontAwesomeIcon icon={faInfoCircle} /> About
-                  </Nav.Link>
+                  </Nav.Link> */}
                   <Nav.Link as={Link} to="/login">
                     <FontAwesomeIcon icon={faSignIn} /> Login
                   </Nav.Link>
@@ -69,9 +69,9 @@ function CustomNavbar() {
                   <Nav.Link as={Link} to="/resumes">
                     <FontAwesomeIcon icon={faFilePdf} /> Resumes
                   </Nav.Link>
-                  <Nav.Link as={Link} to="/profile">
+                  {/* <Nav.Link as={Link} to="/profile">
                     <FontAwesomeIcon icon={faUser} /> Profile
-                  </Nav.Link>
+                  </Nav.Link> */}
                   <Nav.Link as={Link} to="/logout">
                     <FontAwesomeIcon icon={faSignOutAlt} /> Logout
                   </Nav.Link>
