@@ -62,6 +62,19 @@ const ResumeDetails: React.FC = () => {
         <Card.Text>
           <strong>Uploaded At:</strong> {new Date(resume.createdAt).toLocaleString()}
         </Card.Text>
+        {isImage ? (
+          <ImageViewer url={resume.url} />
+        ) : (
+          <div style={{ height: '750px', border: '1px solid #ccc', marginTop: '20px' }}>
+            <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js`}>
+              <Viewer
+                fileUrl={resume.url}
+                defaultScale={SpecialZoomLevel.PageFit}
+                pageLayout={pageLayout}
+              />
+            </Worker>
+          </div>
+        )}
         <Card.Title style={{ marginTop: '1rem' }}>Add Comment</Card.Title>
         <Form onSubmit={handleCommentSubmit}>
           <Form.Group controlId="comment">
@@ -78,46 +91,33 @@ const ResumeDetails: React.FC = () => {
           </Button>
         </Form>
         {error && <div className="text-danger">{error}</div>}
-        {isImage ? (
-          <ImageViewer url={resume.url} />
-        ) : (
-          <div style={{ height: '750px', border: '1px solid #ccc', marginTop: '20px' }}>
-            <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js`}>
-              <Viewer
-                fileUrl={resume.url}
-                defaultScale={SpecialZoomLevel.PageFit}
-                pageLayout={pageLayout}
-              />
-            </Worker>
-          </div>
-        )}
       </Card.Body>
       <Card.Footer>
-      <Card.Title style={{ marginTop: '1rem' }}>Comments</Card.Title>
+        <Card.Title style={{ marginTop: '1rem' }}>Comments</Card.Title>
         {comments && comments.length > 0 ? (
-        <ul className="list-unstyled">
-          {comments.map((comment) => (
-            <li key={comment._id} className="media my-3">
-              <img
-                src={`https://www.gravatar.com/avatar/${comment.commenterId}?d=identicon`} // Example avatar
-                className="mr-3"
-                alt="avatar"
-                style={{ width: '50px', borderRadius: '50%' }}
-              />
-              <div className="media-body">
-                <h5 className="mt-0 mb-1">{comment.user?.username}</h5> {/* Access username */}
-                <p>{comment.content}</p>
-                <small className="text-muted">{new Date(comment.createdAt).toLocaleString()}</small>
-              </div>
-            </li>
-          ))}
-        </ul>
+          <ul className="list-unstyled">
+            {comments.map((comment) => (
+              <li key={comment._id} className="media my-3">
+                <img
+                  src={`https://www.gravatar.com/avatar/${comment.commenterId}?d=identicon`} // Example avatar
+                  className="mr-3"
+                  alt="avatar"
+                  style={{ width: '50px', borderRadius: '50%' }}
+                />
+                <div className="media-body">
+                  <h5 className="mt-0 mb-1">{comment.user?.username}</h5> {/* Access username */}
+                  <p>{comment.content}</p>
+                  <small className="text-muted">{new Date(comment.createdAt).toLocaleString()}</small>
+                </div>
+              </li>
+            ))}
+          </ul>
         ) : (
           <p>No comments available.</p>
         )}
       </Card.Footer>
     </Card>
-  );  
+  );
 };
 
 export default ResumeDetails;
