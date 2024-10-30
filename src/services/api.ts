@@ -7,10 +7,10 @@ const getAuthHeaders = () => {
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
-export const fetchResumes = async (page: number = 1, limit: number = 10) => {
+export const fetchResumes = async (page: number = 1, limit: number = 10, format?: string, createdAt?: string) => {
   const response = await axios.get(`${API_URL}/api/resumes`, {
     headers: { ...getAuthHeaders() },
-    params: { page, limit },
+    params: { page, limit, format, createdAt },
   });
   return response.data;
 };

@@ -25,11 +25,11 @@ export const uploadResumeAsync = createAsyncThunk<IResume, { file: File; format:
   }
 );
 
-export const fetchResumesAsync = createAsyncThunk<IResumesResponse>(
+export const fetchResumesAsync = createAsyncThunk<IResumesResponse, { page?: number; limit?: number; format?: string; createdAt?: string }>(
   'resumes/fetchResumes',
-  async () => {
-    const response = await api.fetchResumes();
-    return response; 
+  async ({ page = 1, limit = 10, format, createdAt }) => {
+    const response = await api.fetchResumes(page, limit, format, createdAt);
+    return response;
   }
 );
 
@@ -41,13 +41,11 @@ export const loadResumeDetails = createAsyncThunk<IResume, string>(
   }
 );
 
-// Slice
 const resumeSlice = createSlice({
   name: 'resumes',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    
     builder
       .addCase(uploadResumeAsync.pending, (state) => {
         state.loading = true;
@@ -55,38 +53,32 @@ const resumeSlice = createSlice({
       })
       .addCase(uploadResumeAsync.fulfilled, (state, action) => {
         state.loading = false;
-
         if (state.data) {
-          state.data.resumes.push(action.payload); 
+          state.data.resumes.push(action.payload);
         }
       })
       .addCase(uploadResumeAsync.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Error uploading resume';
-      });
-
-    // Fetch Resumes Handlers
-    builder
+      })
       .addCase(fetchResumesAsync.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(fetchResumesAsync.fulfilled, (state, action: PayloadAction<IResumesResponse>) => {
-        state.data = action.payload; 
+        state.data = action.payload;
         state.loading = false;
       })
       .addCase(fetchResumesAsync.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Error fetching resumes';
-      });
-
-    builder
+      })
       .addCase(loadResumeDetails.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(loadResumeDetails.fulfilled, (state, action: PayloadAction<IResume>) => {
-        state.selected = action.payload; 
+        state.selected = action.payload;
         state.loading = false;
       })
       .addCase(loadResumeDetails.rejected, (state, action) => {
