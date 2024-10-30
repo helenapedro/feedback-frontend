@@ -4,7 +4,7 @@ import { RootState, AppDispatch } from '../redux/store';
 import { fetchResumesAsync } from '../redux/resumeSlice';
 import { Card, Button, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { Worker, Viewer, VisiblePagesRange } from '@react-pdf-viewer/core';
+import { Worker, Viewer, VisiblePagesRange, PageLayout, Rect } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 
 const ResumeList = () => {
@@ -16,6 +16,20 @@ const ResumeList = () => {
   }, [dispatch]);
 
   const resumes = resumesData?.resumes || []; 
+
+  // Define the PageLayout
+  const pageLayout: PageLayout = {
+    buildPageStyles: ({ pageIndex }) => ({
+      margin: '10px auto',
+      boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+      padding: '10px',
+    }),
+    //transformSize: ({ size }) => size,
+    transformSize: ({ numPages, size }: { numPages: Number, size: Rect }) => ({
+      height: size.height,
+      width: size.width,
+    }) 
+  };
 
   if (loading) {
     return <Spinner animation="border" />;
@@ -48,10 +62,12 @@ const ResumeList = () => {
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
                   <Viewer 
                     fileUrl={resume.url} 
-                    setRenderRange={(visiblePagesRange: VisiblePagesRange)=>{return {endPage:0, startPage:0}}} 
+                   /*  setRenderRange={(visiblePagesRange: VisiblePagesRange) => {
+                      return {endPage:0, startPage:0}
+                    }} */
+                    pageLayout={pageLayout}
                   />
                 </Worker>
-              
               ) : (
                 <img src={resume.url} alt="Resume Preview" style={{ maxWidth: '100%' }} />
               )}
