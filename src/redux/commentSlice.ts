@@ -49,7 +49,7 @@ const commentSlice = createSlice({
         }
       })
       .addCase(deleteCommentAsync.fulfilled, (state, action: PayloadAction<string>) => {
-        state.data = state.data.filter(comment => comment._id !== action.payload); // Remove deleted comment
+        state.data = state.data.filter(comment => comment._id !== action.payload); 
       });
   },
 });
