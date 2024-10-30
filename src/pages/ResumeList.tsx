@@ -54,10 +54,6 @@ const ResumeList = () => {
         resumes.map((resume) => (
           <Card key={resume._id.toString()} className="mb-3">
             <Card.Body>
-              <Card.Title>{resume.format.toUpperCase()} Resume</Card.Title>
-              <Card.Text>
-                <strong>Uploaded At:</strong> {new Date(resume.createdAt).toLocaleString()}
-              </Card.Text>
               <Link to={`/resume/${resume._id}`}>
                 <Button variant="primary" style={{ marginBottom: '8px' }}>View Details</Button>
               </Link>

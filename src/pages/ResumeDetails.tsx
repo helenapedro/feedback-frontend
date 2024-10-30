@@ -4,7 +4,7 @@ import { RootState, AppDispatch } from '../redux/store';
 import { fetchCommentsAsync, addCommentAsync } from '../redux/commentSlice';
 import { loadResumeDetails } from '../redux/resumeSlice';
 import { useParams } from 'react-router-dom';
-import { Button, Form, Spinner } from 'react-bootstrap';
+import { Card, Button, Form, Spinner } from 'react-bootstrap';
 import { Worker, Viewer, PageLayout, Rect, SpecialZoomLevel } from '@react-pdf-viewer/core';
 import ImageViewer from '../components/ImageViewer';
 import '@react-pdf-viewer/core/lib/styles/index.css';
@@ -51,24 +51,26 @@ const ResumeDetails: React.FC = () => {
   const isImage = ['jpg', 'jpeg', 'png'].includes(resume.format);
 
   return (
-    <div>
-      <h2>Resume Details</h2>
-      <p><strong>Format:</strong> {resume.format}</p>
-      <p><strong>Uploaded At:</strong> {new Date(resume.createdAt).toLocaleString()}</p>
-      {isImage ? (
-        <ImageViewer url={resume.url} /> 
-      ) : (
-        <div style={{ height: '750px', border: '1px solid #ccc' }}>
-          <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js`}>
-            <Viewer 
-              fileUrl={resume.url}
-              defaultScale={SpecialZoomLevel.PageFit}
-              pageLayout={pageLayout} 
-            />
-          </Worker>
-        </div>
-      )}
-
+    <Card>
+      <Card.Body>
+        <Card.Title>{resume.format.toUpperCase()} Resume Details </Card.Title>
+        <Card.Text>
+          <strong>Uploaded At:</strong> {new Date(resume.createdAt).toLocaleString()}
+        </Card.Text>
+        {isImage ? (
+          <ImageViewer url={resume.url} /> 
+        ) : (
+          <div style={{ height: '750px', border: '1px solid #ccc' }}>
+            <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js`}>
+              <Viewer 
+                fileUrl={resume.url}
+                defaultScale={SpecialZoomLevel.PageFit}
+                pageLayout={pageLayout} 
+              />
+            </Worker>
+          </div>
+        )}
+      </Card.Body>
       <h3 style={{ marginTop: '2rem' }}>Add Comment</h3>
       <Form onSubmit={handleCommentSubmit}>
         <Form.Group controlId="comment">
@@ -90,7 +92,6 @@ const ResumeDetails: React.FC = () => {
         </Button>
       </Form>
       {error && <div className="text-danger">{error}</div>}
-
       <h3>Comments</h3>
       {comments && comments.length > 0 ? (
         comments.map((comment) => (
@@ -99,7 +100,7 @@ const ResumeDetails: React.FC = () => {
       ) : (
         <p>No comments available.</p>
       )}
-    </div>
+    </Card>
   );
 };
 
