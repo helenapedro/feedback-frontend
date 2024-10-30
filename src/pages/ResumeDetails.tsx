@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../redux/store';
 import { fetchCommentsAsync, addCommentAsync } from '../redux/commentSlice';
 import { loadResumeDetails } from '../redux/resumeSlice';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Card, Button, Form, Spinner } from 'react-bootstrap';
 import { Worker, Viewer, PageLayout, Rect, SpecialZoomLevel } from '@react-pdf-viewer/core';
 import ImageViewer from '../components/ImageViewer';
@@ -53,10 +53,17 @@ const ResumeDetails: React.FC = () => {
   return (
     <Card>
       <Card.Body>
-        <Card.Title>{resume.format.toUpperCase()} Resume Details </Card.Title>
-        <Card.Text>
-          <strong>Uploaded At:</strong> {new Date(resume.createdAt).toLocaleString()}
-        </Card.Text>
+        <Link to={`/resume/${resume._id}`}>
+          <Button 
+            variant="primary" 
+            style={{ marginBottom: '8px' }}
+            >
+              {resume.format.toUpperCase()} Resume Details 
+          </Button>
+          <Card.Text>
+            <strong>Uploaded At:</strong> {new Date(resume.createdAt).toLocaleString()}
+          </Card.Text>
+        </Link>
         {isImage ? (
           <ImageViewer url={resume.url} /> 
         ) : (
