@@ -20,15 +20,15 @@ const ResumeList = () => {
   // Define the PageLayout
   const pageLayout: PageLayout = {
     buildPageStyles: ({ pageIndex }) => ({
-      margin: '10px auto',
-      boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
-      padding: '10px',
+      display: pageIndex === 0 ? 'block' : 'none',
+      margin: 0,
+      padding: 0,
     }),
-    //transformSize: ({ size }) => size,
-    transformSize: ({ numPages, size }: { numPages: Number, size: Rect }) => ({
-      height: size.height,
-      width: size.width,
-    }) 
+    transformSize: ({ pageIndex, size }: { pageIndex: number, size: Rect }) => {
+      return pageIndex === 0
+        ? size
+        : { height: 0, width: 0 };
+    },
   };
 
   if (loading) {
@@ -62,9 +62,6 @@ const ResumeList = () => {
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
                   <Viewer 
                     fileUrl={resume.url} 
-                   /*  setRenderRange={(visiblePagesRange: VisiblePagesRange) => {
-                      return {endPage:0, startPage:0}
-                    }} */
                     pageLayout={pageLayout}
                   />
                 </Worker>
