@@ -2,11 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../redux/store';
 import { fetchResumesAsync } from '../redux/resumeSlice';
-import { selectIsAuthenticated } from '../redux/userSlice';
 import { Link } from 'react-router-dom';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import { Card, Spinner, Pagination } from 'react-bootstrap';
+import * as style from 'react-bootstrap/';
 import { Worker, Viewer, PageLayout, Rect, SpecialZoomLevel } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -16,12 +13,9 @@ const ResumeList = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { data: resumesData, loading, error } = useSelector((state: RootState) => state.resumes);
   const [currentPage, setCurrentPage] = useState(1);
-  const isAuthenticated = useSelector(selectIsAuthenticated);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchDate, setSearchDate] = useState('');
-  const [show, setShow] = useState(false);
-  const handleShow = () => setShow(true);
-
+  
   const handleSearch = () => {
     dispatch(fetchResumesAsync({
       page: 1,
@@ -57,18 +51,19 @@ const ResumeList = () => {
     },
   };
 
-  if (loading) return <Spinner animation="border" />;
+  if (loading) return <style.Spinner animation="border" />;
 
   if (error) return <div>Error fetching resumes: {error}</div>;
 
   return (
-    <div className="resume-list">
-      <Link to="/upload" style={{ marginLeft: '12px' }} >
-        <Button variant="primary" className="mb-3">Upload New Resume</Button>
-      </Link>
-      {isAuthenticated && (
-        <Form className="d-flex" onSubmit={(e) => e.preventDefault()}>
-          <Form.Control
+    <style.Container>
+      <style.Card>
+        <style.CardBody>
+        <Link to="/upload" >
+          <style.Button variant="primary" className="mb-3">Upload New Resume</style.Button>
+        </Link>
+        <style.Form className="d-flex" onSubmit={(e) => e.preventDefault()} >
+          <style.Form.Control
             type="text"
             placeholder="Search by format"
             className="me-2"
@@ -76,53 +71,53 @@ const ResumeList = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <Form.Control
-            type="date"
-            placeholder="Search by date"
-            className="me-2"
-            aria-label="Search by date"
-            value={searchDate}
-            onChange={(e) => setSearchDate(e.target.value)}
-          />
-          <Button variant="outline-light" onClick={handleSearch} style={{ color: '#007acc'}}>
+          <style.Button variant="outline-light" onClick={handleSearch} style={{ color: '#007acc'}}>
             <FontAwesomeIcon icon={faBars} /> Search
-          </Button>
-        </Form>
-        )}
-
+          </style.Button>
+        </style.Form>
+        </style.CardBody>
+      </style.Card>
+      <br />
       {resumes.length === 0 ? (
         <p>No resumes found.</p>
       ) : (
         resumes.map((resume) => (
-          <Card key={resume._id.toString()} className="mb-3">
-            <Card.Body>
+          <style.Card key={resume._id.toString()} className="mb-3">
+            <style.Card.Body>
               <Link to={`/resume/${resume._id}`}>
-                <Button variant="primary" style={{ marginBottom: '8px' }}>View Details</Button>
+                <style.Button 
+                  variant="primary" 
+                  style={{ marginBottom: '8px' }}>View Details
+                </style.Button>
               </Link>
               {resume.format === 'pdf' ? (
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
-                  <Viewer fileUrl={resume.url} defaultScale={SpecialZoomLevel.PageWidth} pageLayout={pageLayout} />
+                  <Viewer 
+                    fileUrl={resume.url} 
+                    defaultScale={SpecialZoomLevel.PageWidth} 
+                    pageLayout={pageLayout} 
+                  />
                 </Worker>
               ) : (
                 <img src={resume.url} alt="Resume Preview" style={{ maxWidth: '100%', backgroundColor: '#007acc' }} />
               )}
-            </Card.Body>
-          </Card>
+            </style.Card.Body>
+          </style.Card>
         ))
       )}
 
-      <Pagination className="mt-3" style={{ marginLeft: '12px' }}>
+      <style.Pagination className="mt-3" style={{ marginLeft: '12px' }}>
         {Array.from({ length: totalPages }, (_, index) => (
-          <Pagination.Item
+          <style.Pagination.Item
             key={index + 1}
             active={index + 1 === currentPage}
             onClick={() => handlePageChange(index + 1)}
           >
             {index + 1}
-          </Pagination.Item>
+          </style.Pagination.Item>
         ))}
-      </Pagination>
-    </div>
+      </style.Pagination>
+    </style.Container>
   );
 };
 
