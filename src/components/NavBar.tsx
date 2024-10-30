@@ -1,20 +1,43 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../redux/store';
 import { selectIsAuthenticated } from '../redux/userSlice';
 import { fetchResumesAsync } from '../redux/resumeSlice';
 import { Link } from 'react-router-dom';
-import { Button, Container, Form, Nav, Navbar } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFilePdf, faBars, faSignIn, faInfoCircle, faUser, faFileAlt, faSignOutAlt, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import {
+  faFilePdf,
+  faBars,
+  faSignIn,
+  faInfoCircle,
+  faUser,
+  faFileAlt,
+  faSignOutAlt,
+  faUserPlus
+} from '@fortawesome/free-solid-svg-icons';
+//import OffcanvasMenu from '../utils/OffcanvasMenu';
 
 function CustomNavbar() {
-  const [searchQuery, setSearchQuery] = useState('');
   const dispatch = useDispatch<AppDispatch>();
   const isAuthenticated = useSelector(selectIsAuthenticated);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchDate, setSearchDate] = useState('');
+  const [show, setShow] = useState(false);
+  const handleShow = () => setShow(true);
 
   const handleSearch = () => {
-    dispatch(fetchResumesAsync({ page: 1, limit: 10, format: searchQuery }));
+    // Dispatch the search with both format and createdAt as query parameters
+    dispatch(fetchResumesAsync({
+      page: 1,
+      limit: 10,
+      format: searchQuery,
+      createdAt: searchDate
+    }));
   };
 
   return (
@@ -24,7 +47,9 @@ function CustomNavbar() {
           <Navbar.Brand as={Link} to={isAuthenticated ? "/resumes" : "/"}>
             <FontAwesomeIcon icon={faFileAlt} style={{ marginRight: '8px' }} /> Resume Feedback
           </Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={handleShow}>
+            <FontAwesomeIcon icon={faBars} style={{ color: 'white' }} />
+          </Navbar.Toggle>
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               {!isAuthenticated ? (
@@ -56,14 +81,24 @@ function CustomNavbar() {
             {isAuthenticated && (
               <Form className="d-flex" onSubmit={(e) => e.preventDefault()}>
                 <Form.Control
-                  type="search"
-                  placeholder="Search by format or date"
+                  type="text"
+                  placeholder="Search by format"
                   className="me-2"
-                  aria-label="Search"
+                  aria-label="Search by format"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                <Button variant="outline-light" onClick={handleSearch}>Search</Button>
+                <Form.Control
+                  type="date"
+                  placeholder="Search by date"
+                  className="me-2"
+                  aria-label="Search by date"
+                  value={searchDate}
+                  onChange={(e) => setSearchDate(e.target.value)}
+                />
+                <Button variant="outline-light" onClick={handleSearch}>
+                  <FontAwesomeIcon icon={faBars} /> Search
+                </Button>
               </Form>
             )}
           </Navbar.Collapse>
