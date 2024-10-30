@@ -36,4 +36,5 @@ export interface IComment {
   isDeleted: boolean; 
   createdAt: Date; 
   updatedAt: Date; 
+  user?: IUser;
 }
