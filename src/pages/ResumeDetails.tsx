@@ -6,6 +6,7 @@ import { loadResumeDetails } from '../redux/resumeSlice';
 import { useParams } from 'react-router-dom';
 import { Button, Form, Spinner } from 'react-bootstrap';
 import { Worker, Viewer, PageLayout, Rect, SpecialZoomLevel } from '@react-pdf-viewer/core';
+import ImageViewer from '../components/ImageViewer';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 
 const ResumeDetails: React.FC = () => {
@@ -47,26 +48,28 @@ const ResumeDetails: React.FC = () => {
 
   if (!resume) return <div>No resume found.</div>;
 
+  const isImage = ['jpg', 'jpeg', 'png'].includes(resume.format);
+
   return (
     <div>
       <h2>Resume Details</h2>
       <p><strong>Format:</strong> {resume.format}</p>
       <p><strong>Uploaded At:</strong> {new Date(resume.createdAt).toLocaleString()}</p>
-      {resume.format === 'pdf' ? (
+      {isImage ? (
+        <ImageViewer url={resume.url} /> 
+      ) : (
         <div style={{ height: '750px', border: '1px solid #ccc' }}>
           <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js`}>
             <Viewer 
               fileUrl={resume.url}
               defaultScale={SpecialZoomLevel.PageFit}
               pageLayout={pageLayout} 
-            /> 
+            />
           </Worker>
         </div>
-      ) : (
-        <p><strong>URL:</strong> <a href={resume.url} target="_blank" rel="noopener noreferrer">{resume.url}</a></p>
       )}
 
-<h3 style={{ marginTop: '2rem' }}>Add Comment</h3>
+      <h3 style={{ marginTop: '2rem' }}>Add Comment</h3>
       <Form onSubmit={handleCommentSubmit}>
         <Form.Group controlId="comment">
           <Form.Control

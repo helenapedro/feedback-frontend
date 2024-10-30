@@ -57,7 +57,9 @@ const ResumeList = () => {
                 <strong>Uploaded At:</strong> {new Date(resume.createdAt).toLocaleString()}
               </Card.Text>
               <Link to={`/resume/${resume._id}`}>
-                <Button variant="primary">View Details</Button>
+                <Button variant="primary" style={{ marginBottom: '8px' }}>
+                  View Details
+                </Button>
               </Link>
               {resume.format === 'pdf' ? (
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
