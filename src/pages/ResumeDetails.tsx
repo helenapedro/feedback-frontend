@@ -59,9 +59,6 @@ const ResumeDetails: React.FC = () => {
             {resume.format.toUpperCase()} Resume Details
           </Button>
         </Link>
-        <Card.Text>
-          <strong>Uploaded At:</strong> {new Date(resume.createdAt).toLocaleString()}
-        </Card.Text>
         {isImage ? (
           <ImageViewer url={resume.url} />
         ) : (
