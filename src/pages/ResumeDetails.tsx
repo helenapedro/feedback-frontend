@@ -5,7 +5,7 @@ import { fetchCommentsAsync, addCommentAsync } from '../redux/commentSlice';
 import { loadResumeDetails } from '../redux/resumeSlice';
 import { useParams } from 'react-router-dom';
 import { Button, Form, Spinner } from 'react-bootstrap';
-import { Worker, Viewer } from '@react-pdf-viewer/core';
+import { Worker, Viewer, PageLayout, Rect, SpecialZoomLevel } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 
 const ResumeDetails: React.FC = () => {
@@ -32,8 +32,20 @@ const ResumeDetails: React.FC = () => {
     }
   };
 
-  if (!resume) return <div>No resume found.</div>;
+  const pageLayout: PageLayout = {
+    buildPageStyles: ({ pageIndex }) => ({
+      display: pageIndex < 5 ? 'block' : 'none',
+      margin: 0,
+      padding: 0,
+    }),
+    transformSize: ({ pageIndex, size }: { pageIndex: number, size: Rect }) => {
+      return pageIndex < 5
+        ? size
+        : { height: size.height * 0.8, width: size.width * 0.8};
+    },
+  };
 
+  if (!resume) return <div>No resume found.</div>;
 
   return (
     <div>
@@ -43,7 +55,11 @@ const ResumeDetails: React.FC = () => {
       {resume.format === 'pdf' ? (
         <div style={{ height: '750px', border: '1px solid #ccc' }}>
           <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js`}>
-            <Viewer fileUrl={resume.url} />
+            <Viewer 
+              fileUrl={resume.url}
+              defaultScale={SpecialZoomLevel.PageFit}
+              pageLayout={pageLayout} 
+            /> 
           </Worker>
         </div>
       ) : (

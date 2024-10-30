@@ -4,7 +4,7 @@ import { RootState, AppDispatch } from '../redux/store';
 import { fetchResumesAsync } from '../redux/resumeSlice';
 import { Card, Button, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { Worker, Viewer, VisiblePagesRange, PageLayout, Rect } from '@react-pdf-viewer/core';
+import { Worker, Viewer, PageLayout, Rect, SpecialZoomLevel } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 
 const ResumeList = () => {
@@ -17,10 +17,11 @@ const ResumeList = () => {
 
   const resumes = resumesData?.resumes || []; 
 
-  // Define the PageLayout
   const pageLayout: PageLayout = {
     buildPageStyles: ({ pageIndex }) => ({
       display: pageIndex === 0 ? 'block' : 'none',
+      border: pageIndex === 0 ? '2px solid #000' : 'none',
+      backgroundColor: pageIndex % 2 === 0 ? '#007acc' : '#fff',
       margin: 0,
       padding: 0,
     }),
@@ -62,11 +63,12 @@ const ResumeList = () => {
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
                   <Viewer 
                     fileUrl={resume.url} 
+                    defaultScale={SpecialZoomLevel.PageWidth}
                     pageLayout={pageLayout}
                   />
                 </Worker>
               ) : (
-                <img src={resume.url} alt="Resume Preview" style={{ maxWidth: '100%' }} />
+                <img src={resume.url} alt="Resume Preview" style={{ maxWidth: '100%', backgroundColor: '#007acc' }} />
               )}
             </Card.Body>
           </Card>
