@@ -44,7 +44,7 @@ const ResumeList = () => {
 
   return (
     <div className="resume-list">
-      <Link to="/upload">
+      <Link to="/upload" style={{ marginLeft: '12px' }} >
         <Button variant="primary" className="mb-3">Upload New Resume</Button>
       </Link>
 
@@ -73,7 +73,7 @@ const ResumeList = () => {
         ))
       )}
 
-      <Pagination className="mt-3">
+      <Pagination className="mt-3" style={{ marginLeft: '12px' }}>
         {Array.from({ length: totalPages }, (_, index) => (
           <Pagination.Item
             key={index + 1}
