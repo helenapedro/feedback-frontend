@@ -11,8 +11,8 @@ export interface IUser {
 }
 
 export interface IResume {
-  //_id: string; 
-  _id: mongoose.Types.ObjectId; 
+  _id: string; 
+  //_id: mongoose.Types.ObjectId; 
   posterId: mongoose.Types.ObjectId; 
   format: 'pdf' | 'docx' | 'jpg' | 'jpeg' | 'png'; 
   url: string;
