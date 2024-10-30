@@ -25,14 +25,14 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
                value={searchQuery}
                onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <style.Form.Control
+          {/* <style.Form.Control
                type="date"
                placeholder="Search by date"
                className="me-2"
                aria-label="Search by date"
                value={searchDate}
                onChange={(e) => setSearchDate(e.target.value)}
-          />
+          /> */}
           <style.Button variant="outline-light" onClick={handleSearch} style={{ color: '#007acc' }}>
                <FontAwesomeIcon icon={faBars} /> Search
           </style.Button>
