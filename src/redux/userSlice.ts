@@ -10,7 +10,7 @@ interface UserState {
   isLoggedIn: boolean;
   userId: string | mongoose.Types.ObjectId | null;
   user: IUser | null;
-  users: IUser[]; // Admin: list of users
+  users: IUser[];
   adminStatus: string;
   updateUserStatus: string, 
   loading: boolean;
