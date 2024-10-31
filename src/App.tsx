@@ -49,7 +49,7 @@ const App: React.FC = () => {
         <Route path="/resumes" element={<ProtectedRoute element={<ResumesLayout />} />}>
           <Route index element={<ResumeList />} />
           <Route path="/resumes/:id" element={<ResumeDetails />} />
-          <Route path="upload" element={<ResumeUploadForm />} />
+          <Route path="/resumes/upload" element={<ResumeUploadForm />} />
         </Route>
         <Route path="/logout" element={<ProtectedRoute element={<Logout />}/>} />
       </Routes>

@@ -49,7 +49,7 @@ const ResumeList = () => {
     <style.Container>
       <style.Card>
         <style.CardBody>
-          <Link to="/upload">
+          <Link to="/resumes/upload">
             <style.Button variant="primary" className="mb-3">Upload New Resume</style.Button>
           </Link>
           <SearchForm onSearch={handleSearch} />
