@@ -24,8 +24,6 @@ const Login = () => {
       const resultAction = await dispatch(loginUserAsync({ email, password })).unwrap();
       
       if (resultAction.user) {
-        localStorage.setItem('authToken', resultAction.token); 
-        
         navigate('/resumes'); 
       }
     } catch (error) {

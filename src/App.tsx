@@ -3,7 +3,8 @@ import { AppDispatch, RootState } from './redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
-import { fetchUserDetailsAsync, selectUserId, logoutUser } from './redux/userSlice';
+import { fetchUserDetailsAsync, logoutUser, setUserId } from './redux/userSlice';
+import { jwtDecode } from 'jwt-decode';
 
 import NavBar from './components/NavBar';
 import Login from './pages/Login';
@@ -15,23 +16,28 @@ import Logout from './components/Logout';
 
 const App: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const userId = useSelector(selectUserId);
+  const userId = useSelector((state: RootState) => state.user.userId);
+  const token = localStorage.getItem('authToken');
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    console.log('token: ', token);
-    console.log('userId: ', userId);
+    if (token) {
+      try {
+        const decodedToken: { userId: string, exp: number } = jwtDecode(token);
+        console.log('decodedToken: ', decodedToken);
 
-    if (token && userId ) {
-      console.log('This is on the If statemant');
-      console.log('token: ', token);
-      console.log('userId: ', userId);
+        if (decodedToken.userId) {
+          dispatch(setUserId(decodedToken.userId));
 
-      dispatch(fetchUserDetailsAsync(userId)).unwrap().catch(() => {
+          dispatch(fetchUserDetailsAsync(decodedToken.userId)).unwrap().catch(() => {
+            dispatch(logoutUser());
+          });
+        }
+      } catch (error) {
+        console.error("Token decoding error:", error);
         dispatch(logoutUser());
-      });
+      }
     }
-  }, [dispatch, userId]);
+  }, [dispatch, token]);
 
   return (
     <Router>

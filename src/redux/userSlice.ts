@@ -40,6 +40,9 @@ const userSlice = createSlice({
     setUser: (state, action: PayloadAction<IUser>) => {
       state.user = action.payload;
     },
+    setUserId: (state, action: PayloadAction<string>) => {
+      state.userId = action.payload;
+    },
     resetUpdateStatus(state) {
       state.updateUserStatus = 'idle';
     },
@@ -217,5 +220,5 @@ export const selectUserInfo = (state: RootState) => state.user.user;
 export const selectUserId = (state: RootState) => state.user.userId;
 export const selectAdminUsers = (state: RootState) => state.user.users;
 
-export const { updateUser,setUser, resetUpdateStatus, logoutUser } = userSlice.actions;
+export const { updateUser,setUser, setUserId, resetUpdateStatus, logoutUser } = userSlice.actions;
 export default userSlice.reducer;
