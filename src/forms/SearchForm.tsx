@@ -9,7 +9,9 @@ interface SearchFormProps {
 
 const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchDate, setSearchDate] = useState('');
+  const [searchDate] = useState('');
+  //const [setSearchDate] = useState('');
+
 
   const handleSearch = () => {
     onSearch(searchQuery, searchDate);

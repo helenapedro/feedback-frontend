@@ -3,7 +3,9 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import type { AppDispatch } from '../redux/store';
 import { uploadResumeAsync } from '../redux/resumeSlice';
-import { Button, Form, Spinner } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as icon from '@fortawesome/free-solid-svg-icons';
+import * as style from 'react-bootstrap/';
 
 const ResumeUploadForm = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -47,26 +49,34 @@ const ResumeUploadForm = () => {
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Form.Group controlId="formFile">
-        <Form.Label>Upload Resume</Form.Label>
-        <Form.Control type="file" accept=".pdf, .docx, .jpg, .jpeg, .png" onChange={handleFileChange} />
-      </Form.Group>
-      <Form.Group controlId="formFormat">
-        <Form.Label>Format</Form.Label>
-        <Form.Control as="select" value={format} onChange={(e) => setFormat(e.target.value)}>
-          <option value="pdf">PDF</option>
-          <option value="docx">DOCX</option>
-          <option value="jpg">JPG</option>
-          <option value="jpeg">JPEG</option>
-          <option value="png">PNG</option>
-        </Form.Control>
-      </Form.Group>
-      <Button variant="primary" type="submit" disabled={loading}>
-        {loading ? <Spinner animation="border" size="sm" /> : 'Upload'}
-      </Button>
-      {error && <div className="text-danger">{error}</div>}
-    </Form>
+    <style.Container>
+      <style.Card>
+        <style.CardBody>
+          <style.Form onSubmit={handleSubmit}>
+            <style.Form.Group controlId="formFile">
+              <style.Form.Label style={{ color: '#007bff' }}>
+                <FontAwesomeIcon icon={icon.faFilePdf} style={{ color: '#007bff' }} /> Upload Resume
+              </style.Form.Label>
+              <style.Form.Control type="file" accept=".pdf, .docx, .jpg, .jpeg, .png" onChange={handleFileChange} />
+            </style.Form.Group>
+            <style.Form.Group controlId="formFormat">
+              <style.Form.Label>Format</style.Form.Label>
+              <style.Form.Control as="select" value={format} onChange={(e) => setFormat(e.target.value)}>
+                <option value="pdf">PDF</option>
+                <option value="jpg">JPG</option>
+                <option value="jpeg">JPEG</option>
+                <option value="png">PNG</option>
+              </style.Form.Control>
+            </style.Form.Group>
+            <style.Button variant="primary" type="submit"  style={{ marginTop: '8px' }} disabled={loading}>
+              {loading ? <style.Spinner animation="border" size="sm" /> : 'Upload'}
+            </style.Button>
+            {error && <div className="text-danger">{error}</div>}
+          </style.Form>
+        </style.CardBody>
+      </style.Card>
+
+    </style.Container>
   );
 };
 
