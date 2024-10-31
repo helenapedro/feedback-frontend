@@ -34,9 +34,9 @@ const ResumeDetails: React.FC = () => {
   return (
     <Card>
       <Card.Body>
-        <Link to={`/resume/${resume._id}`}>
+        <Link to={`/resumes`}>
           <Button variant="primary" style={{ marginBottom: '8px' }}>
-            {resume.format.toUpperCase()} Resume Details
+            View All Resumes
           </Button>
         </Link>
         {isImage ? (
