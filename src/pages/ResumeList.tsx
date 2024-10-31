@@ -62,7 +62,7 @@ const ResumeList = () => {
         resumes.map((resume) => (
           <style.Card key={resume._id.toString()} className="mb-3">
             <style.Card.Body>
-              <Link to={`/resume/${resume._id}`}>
+              <Link to={`/resumes/${resume._id}`}>
                 <style.Button variant="primary" style={{ marginBottom: '8px' }}>View Details</style.Button>
               </Link>
               {resume.format === 'pdf' ? (

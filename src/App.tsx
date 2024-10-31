@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { AppDispatch } from './redux/store';
-import { useDispatch } from 'react-redux';
+import { AppDispatch, RootState } from './redux/store';
+import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
-import { fetchUserDetailsAsync, logoutUser } from './redux/userSlice';
+import { fetchUserDetailsAsync, selectUserId, logoutUser } from './redux/userSlice';
 
 import NavBar from './components/NavBar';
 import Login from './pages/Login';
@@ -15,21 +15,23 @@ import Logout from './components/Logout';
 
 const App: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const userId = useSelector(selectUserId);
 
   useEffect(() => {
-    const checkAuth = () => {
-      const token = localStorage.getItem('authToken');
-      if (token) {
-        dispatch(fetchUserDetailsAsync(token as string))
-          .unwrap()
-          .catch(() => {
-            dispatch(logoutUser());
-          });
-      }
-    };
+    const token = localStorage.getItem('authToken');
+    console.log('token: ', token);
+    console.log('userId: ', userId);
 
-    checkAuth();
-  }, [dispatch]);
+    if (token && userId ) {
+      console.log('This is on the If statemant');
+      console.log('token: ', token);
+      console.log('userId: ', userId);
+
+      dispatch(fetchUserDetailsAsync(userId)).unwrap().catch(() => {
+        dispatch(logoutUser());
+      });
+    }
+  }, [dispatch, userId]);
 
   return (
     <Router>
@@ -37,23 +39,22 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/resumes" element={<ResumeList />} />
-        <Route path="/resume/:id" element={<ResumeDetails />} />
-        <Route path="/upload" element={<ResumeUploadForm />} />
-        <Route path="/logout" element={<ProtectedRoute element={<Logout />}/>} />
-        {/* <Route path="/resumes" element={<ProtectedRoute element={<ResumesLayout />} />}>
+        <Route path="/register" element={<Login />} />
+        <Route path="/resumes" element={<ProtectedRoute element={<ResumesLayout />} />}>
           <Route index element={<ResumeList />} />
-          <Route path="resume/:id" element={<ResumeDetails />} />
-        </Route> */}
+          <Route path="/resumes/:id" element={<ResumeDetails />} />
+          <Route path="upload" element={<ResumeUploadForm />} />
+        </Route>
+        <Route path="/logout" element={<ProtectedRoute element={<Logout />}/>} />
       </Routes>
     </Router>
   );
 };
 
-/* const ResumesLayout = () => {
+const ResumesLayout = () => {
   return (
     <Outlet />
   );
 };
- */
+
 export default App;

@@ -4,11 +4,10 @@ import * as userapi from '../api/userApi';
 import * as adminapi from '../api/adminApi';
 import { IUser } from '../types';
 import { RootState } from './store';
-import mongoose from 'mongoose';
 
 interface UserState {
   isLoggedIn: boolean;
-  userId: string | mongoose.Types.ObjectId | null;
+  userId: string | null;
   user: IUser | null;
   users: IUser[];
   adminStatus: string;
@@ -27,6 +26,9 @@ const initialState: UserState = {
   loading: false,
   error: null,
 };
+
+const getErrorMessage = (error: any): string => 
+  error.response?.data?.message || 'An error occurred';
 
 const userSlice = createSlice({
   name: 'user',
@@ -148,13 +150,11 @@ export const fetchUserDetailsAsync = createAsyncThunk<IUser, string, { rejectVal
     try {
       const response = await userapi.fetchUserDetails(userId);
       return response.data;
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Failed to fetch user details.';
-      return rejectWithValue(errorMessage);
+    } catch (error) {
+      return rejectWithValue(getErrorMessage(error));
     }
   }
 );
-
 
 export const updateUserDetailsAsync = createAsyncThunk<
   IUser,
@@ -187,8 +187,6 @@ export const updateUserPasswordAsync = createAsyncThunk<
   }
 );
 
-
-// Admin actions
 export const fetchAllUsersAsync = createAsyncThunk<IUser[], void, { rejectValue: string }>(
   'user/fetchAllUsers',
   async (_, { rejectWithValue }) => {
@@ -214,9 +212,9 @@ export const deactivateUserAsync = createAsyncThunk<
   }
 );
 
-
 export const selectIsAuthenticated = (state: RootState) => state.user.isLoggedIn;
 export const selectUserInfo = (state: RootState) => state.user.user;
+export const selectUserId = (state: RootState) => state.user.userId;
 export const selectAdminUsers = (state: RootState) => state.user.users;
 
 export const { updateUser,setUser, resetUpdateStatus, logoutUser } = userSlice.actions;

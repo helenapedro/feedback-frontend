@@ -5,7 +5,6 @@ import {
   MDBTabsItem,
   MDBTabsLink,
   MDBTabsContent,
-  MDBBtn,
   MDBInput,
 } from 'mdb-react-ui-kit';
 
@@ -30,10 +29,13 @@ const LoginForm: React.FC<ILoginFormProps> = ({
   confirmPassword, setConfirmPassword,
 }) => {
   const [justifyActive, setJustifyActive] = useState('tab1');
+  const [error, setError] = useState('');
 
   const handleJustifyClick = (value: string) => {
-    if (value === justifyActive) return;
-    setJustifyActive(value);
+    if (value !== justifyActive) {
+      setJustifyActive(value);
+      setError('');
+    }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -42,7 +44,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({
       handleLogin(email, password);
     } else {
       if (password !== confirmPassword) {
-        console.error('Passwords do not match');
+        setError('Passwords do not match');
         return;
       }
       handleRegister(username, email, password);
@@ -65,73 +67,48 @@ const LoginForm: React.FC<ILoginFormProps> = ({
       </MDBTabs>
 
       <MDBTabsContent>
-        {justifyActive === 'tab1' && (
-          <div>
-            <form onSubmit={handleSubmit}>
-              <MDBInput
-                wrapperClass="mb-4"
-                label="Email address"
-                id="form1"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <MDBInput
-                wrapperClass="mb-4"
-                label="Password"
-                id="form2"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <MDBBtn type="submit" className="mb-4 w-100">
-                Sign in
-              </MDBBtn>
-            </form>
-          </div>
-        )}
-
-        {justifyActive === 'tab2' && (
-          <div>
-            <form onSubmit={handleSubmit}>
-              <MDBInput
-                wrapperClass="mb-4"
-                label="Username"
-                id="form4"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-              <MDBInput
-                wrapperClass="mb-4"
-                label="Email"
-                id="form5"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <MDBInput
-                wrapperClass="mb-4"
-                label="Password"
-                id="form6"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <MDBInput
-                wrapperClass="mb-4"
-                label="Confirm Password"
-                id="form7"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-              <MDBBtn type="submit" className="mb-4 w-100">
-                Sign up
-              </MDBBtn>
-            </form>
-          </div>
-        )}
+        <form onSubmit={handleSubmit}>
+          {justifyActive === 'tab2' && (
+            <MDBInput
+              wrapperClass="mb-4"
+              label="Username"
+              id="form-username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          )}
+          <MDBInput
+            wrapperClass="mb-4"
+            label="Email address"
+            id="form-email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <MDBInput
+            wrapperClass="mb-4"
+            label="Password"
+            id="form-password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {justifyActive === 'tab2' && (
+            <MDBInput
+              wrapperClass="mb-4"
+              label="Confirm Password"
+              id="form-confirm-password"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+          )}
+          {error && <div className="alert alert-danger">{error}</div>}
+          <button type="submit" className="btn btn-primary w-100">
+            {justifyActive === 'tab1' ? 'Login' : 'Register'}
+          </button>
+        </form>
       </MDBTabsContent>
     </MDBContainer>
   );
