@@ -23,7 +23,6 @@ const App: React.FC = () => {
     if (token) {
       try {
         const decodedToken: { userId: string, exp: number } = jwtDecode(token);
-        console.log('decodedToken: ', decodedToken);
 
         if (decodedToken.userId) {
           dispatch(setUserId(decodedToken.userId));
