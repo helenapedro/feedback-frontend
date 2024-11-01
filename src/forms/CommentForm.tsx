@@ -12,17 +12,19 @@ const CommentForm: React.FC<CommentFormProps> = ({ resumeId }) => {
      const dispatch = useDispatch<AppDispatch>();
      const [comment, setComment] = useState('');
      const { data: comments, loading, error } = useSelector((state: RootState) => state.comments);
-     console.log(comments);
+     console.log('data: ', comments);
      
      useEffect(() => {
-          dispatch(fetchCommentsAsync(resumeId));
-          console.log('Comments: ', comments);
+          if (resumeId) {
+               dispatch(fetchCommentsAsync(resumeId));
+               console.log('resumeId: ', resumeId);
+          }
      }, [dispatch, resumeId]);
 
      const handleSubmit = async (e: React.FormEvent) => {
           e.preventDefault();
 
-          if (loading) return; // Prevent multiple submissions
+          if (loading) return; 
 
           try {
                const { _id } = await dispatch(addCommentAsync({ resumeId, content: comment })).unwrap();
@@ -37,47 +39,53 @@ const CommentForm: React.FC<CommentFormProps> = ({ resumeId }) => {
 
      return (
           <style.Container>
-               <style.Form onSubmit={handleSubmit}>
-                    <style.Form.Group controlId="comment">
-                         <style.Form.Label>Add a Comment</style.Form.Label>
-                              <style.Form.Control
-                                   as="textarea"
-                                   rows={3}
-                                   value={comment}
-                                   onChange={(e) => setComment(e.target.value)}
-                                   placeholder="Write your comment here..."
-                              />
-                         </style.Form.Group>
-                    <style.Button variant="primary" type="submit" disabled={loading || !comment.trim()}>
-                         {loading ? <style.Spinner animation="border" size="sm" /> : 'Submit'}
-                    </style.Button>
-                    {error && <div className="text-danger">{error}</div>}
-               </style.Form>
+               <style.Card>
+                    <style.Card.Body>
+                         <style.Form onSubmit={handleSubmit}>
+                              <style.Form.Group controlId="comment">
+                                   <style.Form.Label>Add a Comment</style.Form.Label>
+                                        <style.Form.Control
+                                             as="textarea"
+                                             rows={3}
+                                             value={comment}
+                                             onChange={(e) => setComment(e.target.value)}
+                                             placeholder="Write your comment here..."
+                                        />
+                                   </style.Form.Group>
+                              <style.Button style={{ marginTop: '8px' }} variant="primary" type="submit" disabled={loading || !comment.trim()}>
+                                   {loading ? <style.Spinner animation="border" size="sm" /> : 'Submit'}
+                              </style.Button>
+                              {error && <style.CardText className="text-danger">{error}</style.CardText>}
+                         </style.Form>
 
-               <style.Card.Footer>
-                    <style.Card.Title style={{ marginTop: '1rem' }}>Comments</style.Card.Title>
-                         {comments && comments.length > 0 ? (
-                              <ul className="list-unstyled">
-                                   {comments.map((comment) => (
-                                        <li key={comment._id} className="media my-3">
-                                             <img
-                                                  src={`https://www.gravatar.com/avatar/${comment.commenterId}?d=identicon`} 
-                                                  className="mr-3"
-                                                  alt="avatar"
-                                                  style={{ width: '50px', borderRadius: '50%' }}
-                                             />
-                                             <div className="media-body">
-                                                  <h5 className="mt-0 mb-1">{comment.user?.username}</h5>
-                                                  <p>{comment.content}</p>
-                                                  <small className="text-muted">{new Date(comment.createdAt).toLocaleString()}</small>
-                                             </div>
-                                        </li>
-                                   ))}
-                              </ul>
-                         ) : (
-                              <p>No comments available.</p>
-                         )}
-                    </style.Card.Footer>
+                         <style.Card.Footer>
+                              <style.Card.Title style={{ marginTop: '1rem' }}>Comments</style.Card.Title>
+                                   {comments && comments.length > 0 ? (
+                                        <style.ListGroup className="list-unstyled">
+                                             {comments.map((comment) => (
+                                                  <style.ListGroupItem key={comment._id} className="media my-3">
+                                                       <style.CardImg
+                                                            src={`https://www.gravatar.com/avatar/${comment.commenterId}?d=identicon`} 
+                                                            className="mr-3"
+                                                            alt="avatar"
+                                                            style={{ width: '50px', borderRadius: '50%' }}
+                                                       />
+                                                       <style.CardBody className="media-body">
+                                                            <h5 className="mt-0 mb-1">{comment.user?.username}</h5>
+                                                            <p>{comment.content}</p>
+                                                            <small className="text-muted">{new Date(comment.createdAt).toLocaleString()}</small>
+                                                       </style.CardBody>
+                                                  </style.ListGroupItem>
+                                             ))}
+                                        </style.ListGroup>
+                                   ) : (
+                                   <p>No comments available.</p>
+                              )}
+                         </style.Card.Footer>
+                    </style.Card.Body>
+
+               </style.Card>
+
           </style.Container>
      );
 };

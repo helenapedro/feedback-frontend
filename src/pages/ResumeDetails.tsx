@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../redux/store';
 import { loadResumeDetails } from '../redux/resumeSlice';
 import { Link, useParams } from 'react-router-dom';
-import { Card, Button } from 'react-bootstrap';
+import { Card, Button, Container, CardBody } from 'react-bootstrap';
 import { Worker, Viewer, SpecialZoomLevel } from '@react-pdf-viewer/core';
 import ImageViewer from '../components/ImageViewer';
 import '@react-pdf-viewer/core/lib/styles/index.css';
@@ -32,29 +32,31 @@ const ResumeDetails: React.FC = () => {
   };
 
   return (
-    <Card>
-      <Card.Body>
-        <Link to={`/resumes`}>
-          <Button variant="primary" style={{ marginBottom: '8px' }}>
-            View All Resumes
-          </Button>
-        </Link>
-        {isImage ? (
-          <ImageViewer url={resume.url} />
-        ) : (
-          <div style={viewerContainerStyle}>
-            <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js`}>
-              <Viewer
-                fileUrl={resume.url}
-                defaultScale={SpecialZoomLevel.PageFit}
-                onDocumentLoad={(e) => setPageCount(e.doc.numPages)} 
-              />
-            </Worker>
-          </div>
-        )}
-        <CommentForm resumeId={resume._id} />
-      </Card.Body>
-    </Card>
+    <Container>
+      <Card>
+        <Card.Body>
+          <Link to={`/resumes`}>
+            <Button variant="primary" style={{ marginBottom: '8px' }}>
+              View All Resumes
+            </Button>
+          </Link>
+          {isImage ? (
+            <ImageViewer url={resume.url} />
+          ) : (
+            <CardBody style={viewerContainerStyle}>
+              <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js`}>
+                <Viewer
+                  fileUrl={resume.url}
+                  defaultScale={SpecialZoomLevel.PageFit}
+                  onDocumentLoad={(e) => setPageCount(e.doc.numPages)} 
+                />
+              </Worker>
+            </CardBody>
+          )}
+          <CommentForm resumeId={resume._id} />
+        </Card.Body>
+      </Card>
+    </Container>
   );
 };
 

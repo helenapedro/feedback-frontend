@@ -39,7 +39,7 @@ export const fetchCommentsByResume = async (resumeId: string) => {
   const response = await axios.get(`${API_URL}/api/comments/${resumeId}`, {
     headers: { ...getAuthHeaders() },
   });
-  console.log('fetchCommentsByResume: ', response);
+  
   return response.data;
 };
 

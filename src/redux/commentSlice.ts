@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { IComment } from '../types';
 import * as api from '../services/api';
-import mongoose from 'mongoose';
 
 interface CommentState {
   data: IComment[];
