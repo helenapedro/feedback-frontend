@@ -36,6 +36,7 @@ const Login = () => {
     try {
       await registerUser(username, email, password);
       console.log('Registration successful');
+      navigate('/resumes');
     } catch (error) {
       setError('Registration failed. Please try again.');
       console.error('Registration error:', error);

@@ -39,6 +39,7 @@ export const fetchCommentsByResume = async (resumeId: string) => {
   const response = await axios.get(`${API_URL}/api/comments/${resumeId}`, {
     headers: { ...getAuthHeaders() },
   });
+  console.log('fetchCommentsByResume: ', response);
   return response.data;
 };
 
@@ -47,6 +48,7 @@ export const addComment = async (resumeId: string, content: string) => {
   const response = await axios.post(`${API_URL}/api/comments/add`, { resumeId, content }, {
     headers: { ...getAuthHeaders() },
   });
+  console.log('response: ', response);
   return response.data;
 };
 

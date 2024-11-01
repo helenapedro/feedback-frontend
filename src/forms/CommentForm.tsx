@@ -11,32 +11,26 @@ interface CommentFormProps {
 const CommentForm: React.FC<CommentFormProps> = ({ resumeId }) => {
      const dispatch = useDispatch<AppDispatch>();
      const [comment, setComment] = useState('');
-     const [error, setError] = useState('');
-
-     const comments = useSelector((state: RootState) => state.comments.data);
-     const loading = useSelector((state: RootState) => state.comments.loading);
-     const addError = useSelector((state: RootState) => state.comments.error);
-
+     const { data: comments, loading, error } = useSelector((state: RootState) => state.comments);
+     console.log(comments);
+     
      useEffect(() => {
-     dispatch(fetchCommentsAsync(resumeId));
+          dispatch(fetchCommentsAsync(resumeId));
      }, [dispatch, resumeId]);
 
      const handleSubmit = async (e: React.FormEvent) => {
           e.preventDefault();
 
-          if (!comment.trim()) {
-               alert('Please write a comment');
-               return;
-          }
+          if (loading) return; // Prevent multiple submissions
 
           try {
-               await dispatch(addCommentAsync({ resumeId, content: comment })).unwrap();
+               const { _id } = await dispatch(addCommentAsync({ resumeId, content: comment })).unwrap();
+               if (!_id) {
+                    throw new Error('Comment creation failed.');
+               }
                setComment('');
-               setError('');
-               dispatch(fetchCommentsAsync(resumeId)); 
-          } catch (err) {
+          } catch (error) {
                console.error('Failed to add comment');
-               setError('Failed to add comment');
           }
      };
 
@@ -53,11 +47,10 @@ const CommentForm: React.FC<CommentFormProps> = ({ resumeId }) => {
                                    placeholder="Write your comment here..."
                               />
                          </style.Form.Group>
-                    <style.Button variant="primary" type="submit" disabled={loading}>
+                    <style.Button variant="primary" type="submit" disabled={loading || !comment.trim()}>
                          {loading ? <style.Spinner animation="border" size="sm" /> : 'Submit'}
                     </style.Button>
                     {error && <div className="text-danger">{error}</div>}
-                    {addError && <div className="text-danger">{addError}</div>}
                </style.Form>
 
                <style.Card.Footer>
@@ -73,7 +66,6 @@ const CommentForm: React.FC<CommentFormProps> = ({ resumeId }) => {
                                                   style={{ width: '50px', borderRadius: '50%' }}
                                              />
                                              <div className="media-body">
-                                                  <h5 className="mt-0 mb-1">{comment.user?.username}</h5>
                                                   <h5 className="mt-0 mb-1">{comment.user?.username}</h5>
                                                   <p>{comment.content}</p>
                                                   <small className="text-muted">{new Date(comment.createdAt).toLocaleString()}</small>
