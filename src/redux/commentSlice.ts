@@ -25,12 +25,6 @@ const commentSlice = createSlice({
   name: 'comments',
   initialState,
   reducers: {
-    addOptimisticComment(state, action: PayloadAction<IComment>) {
-      state.data.push(action.payload);
-    },
-    removeOptimisticComment(state, action: PayloadAction<string>) {
-      state.data = state.data.filter(comment => comment._id !== action.payload);
-    },
     resetUpdateStatus: (state) => {
       state.updateCommentStatus = 'idle';
       state.successMessage = '';
@@ -44,25 +38,25 @@ const commentSlice = createSlice({
     setError(state, action: PayloadAction<string | null>) {
       state.error = action.payload;
     },
-    /* updateCommentInState(state, action: PayloadAction<string>) {
+    updateCommentInState(state, action: PayloadAction<IComment>) {
       const index = state.data.findIndex((Comment) => Comment._id === action.payload._id);
       if (index !== -1) {
         state.data[index] = action.payload;
       }
-    }, */
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCommentsAsync.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(fetchCommentsAsync.fulfilled, (state, action: PayloadAction<IComment[]>) => {
         state.loading = false;
         state.data = action.payload; 
-        state.error = null;
       })
       .addCase(fetchCommentsAsync.rejected, (state, action) => {
-        state.loading = false;
+        state.updateCommentStatus = 'rejected';
         state.error = action.error.message || 'Failed to fetch comments';
       })
 
@@ -158,6 +152,6 @@ export const deleteCommentAsync = createAsyncThunk<string, string>(
   }
 );
 
-export const { addOptimisticComment, removeOptimisticComment, setLoading, setError } = commentSlice.actions;
+export const { setLoading, setError, resetUpdateStatus, clearSuccessMessage, updateCommentInState } = commentSlice.actions;
 
 export default commentSlice.reducer;

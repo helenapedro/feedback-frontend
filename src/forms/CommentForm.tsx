@@ -16,6 +16,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ resumeId }) => {
      
      useEffect(() => {
           dispatch(fetchCommentsAsync(resumeId));
+          console.log('Comments: ', comments);
      }, [dispatch, resumeId]);
 
      const handleSubmit = async (e: React.FormEvent) => {
