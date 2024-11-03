@@ -31,7 +31,6 @@ const CommentList: React.FC<CommentListProps> = ({ resumeId }) => {
                <li key={comment._id}>
                <p>{comment.content}</p>
                <button onClick={() => handleDelete(comment._id)}>Delete</button>
-               {/* CommentForm with commentId for editing */}
                <CommentForm resumeId={resumeId} commentId={comment._id} initialContent={comment.content} />
                </li>
           ))}

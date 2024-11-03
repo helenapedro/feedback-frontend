@@ -14,20 +14,28 @@ const initialState: CommentState = {
   error: null,
 };
 
-export const fetchComments = createAsyncThunk('comments/fetchComments', async (resumeId: string) => {
-  return await api.getCommentsByResume(resumeId);
+export const fetchComments = createAsyncThunk(
+  'comments/fetchComments', 
+  async (resumeId: string) => {
+    return await api.getCommentsByResume(resumeId);
 });
 
-export const addNewComment = createAsyncThunk('comments/addComment', async (payload: AddCommentPayload) => {
-  return await api.addComment(payload);
+export const addNewComment = createAsyncThunk(
+  'comments/addComment', 
+  async (payload: AddCommentPayload) => {
+    return await api.addComment(payload);
 });
 
-export const updateExistingComment = createAsyncThunk('comments/updateComment', async (payload: UpdateCommentPayload) => {
-  return await api.updateComment(payload);
+export const updateExistingComment = createAsyncThunk(
+  'comments/updateComment', 
+  async (payload: UpdateCommentPayload) => {
+    return await api.updateComment(payload);
 });
 
-export const removeComment = createAsyncThunk('comments/deleteComment', async (commentId: string) => {
-  await api.deleteComment(commentId);
+export const removeComment = createAsyncThunk(
+  'comments/deleteComment', 
+  async (commentId: string) => {
+    await api.deleteComment(commentId);
   return commentId;
 });
 

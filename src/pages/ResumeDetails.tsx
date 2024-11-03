@@ -54,12 +54,7 @@ const ResumeDetails: React.FC = () => {
               </Worker>
             </CardBody>
           )}
-          {/* <CommentForm resumeId={resume._id} /> */}
           { id && <CommentList resumeId={id} />} 
-          {/* <CommentList resumeId={''} /> */}
-          {/* <CommentList resumeId={id || ""} /> */}
-          {/* <CommentList resumeId={resume._id} /> */}
-          {/* {id && <CommentList resumeId={id} />} */}
         </Card.Body>
       </Card>
     </Container>
