@@ -8,6 +8,7 @@ import { Worker, Viewer, SpecialZoomLevel } from '@react-pdf-viewer/core';
 import ImageViewer from '../components/ImageViewer';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import CommentForm from '../forms/CommentForm';
+import CommentList from '../forms/CommentList';
 
 const ResumeDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -53,7 +54,12 @@ const ResumeDetails: React.FC = () => {
               </Worker>
             </CardBody>
           )}
-          <CommentForm resumeId={resume._id} />
+          {/* <CommentForm resumeId={resume._id} /> */}
+          { id && <CommentList resumeId={id} />} 
+          {/* <CommentList resumeId={''} /> */}
+          {/* <CommentList resumeId={id || ""} /> */}
+          {/* <CommentList resumeId={resume._id} /> */}
+          {/* {id && <CommentList resumeId={id} />} */}
         </Card.Body>
       </Card>
     </Container>

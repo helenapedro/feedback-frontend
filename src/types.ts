@@ -12,8 +12,7 @@ export interface IUser {
 
 export interface IResume {
   _id: string; 
-  //_id: mongoose.Types.ObjectId; 
-  posterId: mongoose.Types.ObjectId; 
+  posterId: string; 
   format: 'pdf' | 'docx' | 'jpg' | 'jpeg' | 'png'; 
   url: string;
   createdAt: Date; 
@@ -27,14 +26,23 @@ export interface IResumesResponse {
   resumes: IResume[]; 
 }
 
-export interface IComment {
+export interface Comment {
   _id: string; 
-  //_id: mongoose.Types.ObjectId; 
-  resumeId: mongoose.Types.ObjectId; 
-  commenterId: mongoose.Types.ObjectId; 
+  resumeId: string; 
+  commenterId: string; 
   content: string; 
   isDeleted: boolean; 
   createdAt: Date; 
   updatedAt: Date; 
-  user?: IUser;
+  //user?: IUser;
+}
+
+export interface AddCommentPayload {
+  resumeId: string;
+  content: string;
+}
+
+export interface UpdateCommentPayload {
+  commentId: string;
+  content: string;
 }

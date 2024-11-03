@@ -19,8 +19,15 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+const getAuthHeaders = () => {
+  const token = localStorage.getItem('authToken');
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
 export const fetchUserDetails = async (userId: string): Promise<AxiosResponse<IUser>> => {
-  return api.get(`/api/auth/user/${userId}`);
+  return api.get(`/api/auth/user/${userId}`, {
+    headers: { ...getAuthHeaders() },
+  });
 };
 
 export const updateUserDetails = async (data: { username?: string; email?: string }): Promise<AxiosResponse<IUser>> => {
