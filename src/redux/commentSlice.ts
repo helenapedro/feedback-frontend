@@ -51,7 +51,10 @@ const commentSlice = createSlice({
       })
       .addCase(fetchComments.fulfilled, (state, action: PayloadAction<Comment[]>) => {
         state.loading = false;
-        state.comments = action.payload;
+        state.comments = action.payload.map(comment => ({
+          ...comment,
+          user: comment.user,
+        }));
       })
       .addCase(fetchComments.rejected, (state, action) => {
         state.loading = false;

@@ -35,12 +35,15 @@ export interface IResumesResponse {
 export interface Comment {
   _id: string; 
   resumeId: string; 
-  commenterId: string; 
+  commenterId: {
+    _id: string;
+    username: string;
+  };
   content: string; 
   isDeleted: boolean; 
   createdAt: Date; 
   updatedAt: Date; 
-  //user?: IUser;
+  user?: User;
 }
 
 export interface AddCommentPayload {

@@ -1,7 +1,7 @@
 import React, { FormEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../redux/store';
-import { addNewComment, updateExistingComment } from '../redux/commentSlice';
+import { addNewComment, fetchComments, updateExistingComment } from '../redux/commentSlice';
 //import { AddCommentPayload } from '../types';
 import * as style from 'react-bootstrap/';
 
@@ -23,6 +23,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ resumeId, commentId, initialC
               await dispatch(updateExistingComment({ commentId, content }));
             } else {
               await dispatch(addNewComment({ resumeId, content }));
+              dispatch(fetchComments(resumeId));
             }
             setContent('');
             if (onSubmitSuccess) onSubmitSuccess();
@@ -32,30 +33,24 @@ const CommentForm: React.FC<CommentFormProps> = ({ resumeId, commentId, initialC
      };
 
      return (
-          <style.Container>
-               <style.Card>
-                    <style.Card.Body>
-                         <style.Form onSubmit={handleSubmit}>
-                              <style.Form.Group controlId="comment">
-                                   <style.Form.Label>Add a Comment</style.Form.Label>
-                                        <style.Form.Control
-                                             as="textarea"
-                                             rows={3}
-                                             value={content}
-                                             onChange={(e) => setContent(e.target.value)}
-                                             required
-                                             placeholder="Write your comment here..."
-                                        />
-                              </style.Form.Group>
-                              <style.Button style={{ marginTop: '8px' }} variant="primary" type="submit">
-                                   {commentId ? 'Update Comment' : 'Add Comment'}
-                              </style.Button>
-                         </style.Form>
-                    </style.Card.Body>
-
-               </style.Card>
-
-          </style.Container>
+          <style.Card.Body>
+               <style.Form onSubmit={handleSubmit}>
+                    <style.Form.Group controlId="comment">
+                         <style.Form.Label style={{ color: '#007bff' }}>Add a Comment</style.Form.Label>
+                              <style.Form.Control
+                                   as="textarea"
+                                   rows={3}
+                                   value={content}
+                                   onChange={(e) => setContent(e.target.value)}
+                                   required
+                                   placeholder="Write your comment here..."
+                              />
+                    </style.Form.Group>
+                    <style.Button style={{ marginTop: '8px' }} variant="primary" type="submit">
+                         {commentId ? 'Update Comment' : 'Add Comment'}
+                    </style.Button>
+               </style.Form>
+          </style.Card.Body>
      );
 };
 
