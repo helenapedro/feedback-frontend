@@ -2,9 +2,10 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { selectUserInfo } from '../redux/userSlice';
 import { User } from '../types';
+import { Link } from 'react-router-dom';
 import * as styles from 'react-bootstrap/';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faEnvelope, faUserShield, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faEnvelope, faEdit } from '@fortawesome/free-solid-svg-icons';
 
 const UserDetails = () => {
   const user: User | null = useSelector(selectUserInfo);
@@ -29,17 +30,17 @@ const UserDetails = () => {
               <FontAwesomeIcon icon={faEnvelope} className="me-2" />
               <strong>Email:</strong> {user.email}
             </styles.ListGroupItem>
-            <styles.ListGroupItem>
+            {/* <styles.ListGroupItem>
               <FontAwesomeIcon icon={faUserShield} className="me-2" />
               <strong>Admin:</strong> {user.isAdmin ? 'Yes' : 'No'}
-            </styles.ListGroupItem>
+            </styles.ListGroupItem> */}
           </styles.ListGroup>
         </styles.Card.Body>
         <styles.Card.Footer className="text-center">
-          <styles.Button variant="primary">
-            <FontAwesomeIcon icon={faEdit} className="me-2" />
-            Edit Profile
-          </styles.Button>
+        <Link to="edit" className="btn btn-primary">
+          <FontAwesomeIcon icon={faEdit} className="me-2" />
+          Edit Profile
+        </Link>
         </styles.Card.Footer>
       </styles.Card>
     </styles.Container>

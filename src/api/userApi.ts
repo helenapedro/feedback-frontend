@@ -48,6 +48,12 @@ export const updateUser = async (userData: Partial<User>): Promise<User> => {
   return response.data;
 };
 
+export const changePassword = async (oldPassword: string, newPassword: string): Promise<void> => {
+  await api.post('/api/auth/user/change-password', { oldPassword, newPassword }, {
+    headers: getAuthHeaders(),
+  });
+};
+
 export const deleteUser = async (): Promise<void> => {
   await api.delete('/api/auth/user/delete', {
     headers: getAuthHeaders(),

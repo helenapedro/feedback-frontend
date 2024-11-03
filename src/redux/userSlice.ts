@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { registerUser, loginUser, getUser } from '../api/userApi';
+import { registerUser, loginUser, getUser, updateUser, changePassword, deleteUser } from '../api/userApi';
 import { User, UserResponse } from '../types';
 import { RootState } from './store';
 
@@ -66,6 +66,49 @@ export const fetchUser = createAsyncThunk<User>(
   }
 );
 
+export const updateUserAsync = createAsyncThunk<User, Partial<User>>(
+  'user/updateUser',
+  async (userData, thunkAPI) => {
+    try {
+      const token = localStorage.getItem('authToken');
+
+      if (!token) {
+        return thunkAPI.rejectWithValue('No valid token found');
+      }
+
+      const user = await updateUser(userData);
+      return user;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response?.data?.message || 'Failed to update user');
+    }
+  }
+);
+
+// Change user password
+export const changeUserPassword = createAsyncThunk<void, { oldPassword: string; newPassword: string }>(
+  'user/changePassword',
+  async ({ oldPassword, newPassword }, thunkAPI) => {
+    try {
+      await changePassword(oldPassword, newPassword);
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response?.data?.message || 'Failed to change password');
+    }
+  }
+);
+
+// Delete user account
+export const deactivateUserAccount = createAsyncThunk<void>(
+  'user/deleteUser',
+  async (_, thunkAPI) => {
+    try {
+      await deleteUser();
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response?.data?.message || 'Failed to deactivate account');
+    }
+  }
+);
+
+
 export const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -125,7 +168,51 @@ export const userSlice = createSlice({
       .addCase(fetchUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
-      });
+      })
+
+      builder
+    .addCase(updateUserAsync.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase(updateUserAsync.fulfilled, (state, action: PayloadAction<User>) => {
+      state.user = action.payload; 
+      state.loading = false;
+      state.error = null;
+    })
+    .addCase(updateUserAsync.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string; 
+    })
+
+    builder
+    .addCase(changeUserPassword.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase(changeUserPassword.fulfilled, (state) => {
+      state.loading = false;
+      state.error = null;
+    })
+    .addCase(changeUserPassword.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
+    })
+    .addCase(deactivateUserAccount.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase(deactivateUserAccount.fulfilled, (state) => {
+      state.user = null; 
+      state.isLoggedIn = false;
+      localStorage.removeItem('authToken');
+      state.loading = false;
+      state.error = null;
+    })
+    .addCase(deactivateUserAccount.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
+    });
   },
 });
 

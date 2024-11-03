@@ -13,6 +13,10 @@ import ProtectedRoute from './utils/ProtectedRoute';
 import UserDetails from './pages/UserDetails';
 import Logout from './components/Logout';
 import { fetchUser, logout } from './redux/userSlice';
+import EditProfile from './forms/EditProfileForm';
+import ChangePassword from './forms/ChangePasswordForm';
+import DeleteAccount from './forms/DeleteAccountForm';
+import ProfilePage from './pages/ProfilePage';
 
 const App: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -43,15 +47,21 @@ const App: React.FC = () => {
     <Router>
       <NavBar />
       <Routes>
+        {/* Public routes */}
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Login />} />
+
+        {/* Protected routes */}
         <Route path="/resumes" element={<ProtectedRoute element={<ResumesLayout />} />}>
           <Route index element={<ResumeList />} />
           <Route path=":id" element={<ResumeDetails />} />
           <Route path="upload" element={<ResumeUploadForm />} />
         </Route>
-        <Route path="/profile" element={<ProtectedRoute element={<UserDetails />} />} />
+
+        <Route path="/profile" element={<ProtectedRoute element={<ProfileLayout />} />}>
+          <Route index element={<ProfilePage />} />
+        </Route>
         <Route path="/logout" element={<ProtectedRoute element={<Logout />} />} />
       </Routes>
     </Router>
@@ -59,5 +69,6 @@ const App: React.FC = () => {
 };
 
 const ResumesLayout = () => <Outlet />;
+const ProfileLayout = () => <Outlet />;
 
 export default App;
