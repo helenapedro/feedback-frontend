@@ -31,6 +31,10 @@ const CommentForm: React.FC<CommentFormProps> = ({ resumeId, commentId, initialC
             console.error('Failed to submit comment:', error);
           }
      };
+     /* const handleCommentSubmit = async (content: string) => { 
+          await dispatch(addNewComment({ resumeId, content })); 
+          dispatch(fetchComments(resumeId)); 
+     }; */
 
      return (
           <style.Card.Body>

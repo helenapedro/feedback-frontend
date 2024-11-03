@@ -2,9 +2,11 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { registerUser, loginUser, getUser, updateUser, changePassword, deleteUser } from '../api/userApi';
 import { User, UserResponse } from '../types';
 import { RootState } from './store';
+import { useSelector } from 'react-redux';
 
 interface UserState {
   user: User | null;
+  users: User[];
   token: string | null;
   loading: boolean;
   error: string | null;
@@ -13,11 +15,122 @@ interface UserState {
 
 const initialState: UserState = {
   user: null,
+  users: [],
   token: localStorage.getItem('authToken'),
   loading: false,
   error: null,
   isLoggedIn: !!localStorage.getItem('authToken'),
 };
+
+export const userSlice = createSlice({
+  name: 'user',
+  initialState,
+  reducers: {
+    loginSuccess(state, action: PayloadAction<User>) {
+      state.user = action.payload;
+      state.isLoggedIn = true;
+    },
+    logout(state) {
+      state.user = null;
+      state.token = null;
+      state.isLoggedIn = false;
+      localStorage.removeItem('authToken');
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(register.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(register.fulfilled, (state, action: PayloadAction<UserResponse>) => {
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        state.isLoggedIn = true;
+        state.loading = false;
+        localStorage.setItem('authToken', action.payload.token);
+      })
+      .addCase(register.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(login.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(login.fulfilled, (state, action: PayloadAction<UserResponse>) => {
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        state.isLoggedIn = true;
+        state.loading = false;
+        localStorage.setItem('authToken', action.payload.token);
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(fetchUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchUser.fulfilled, (state, action: PayloadAction<User>) => {
+        state.user = action.payload;
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(fetchUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      builder
+    .addCase(updateUserAsync.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase(updateUserAsync.fulfilled, (state, action: PayloadAction<User>) => {
+      state.user = action.payload; 
+      state.loading = false;
+      state.error = null;
+    })
+    .addCase(updateUserAsync.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string; 
+    })
+
+    builder
+    .addCase(changeUserPassword.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase(changeUserPassword.fulfilled, (state) => {
+      state.loading = false;
+      state.error = null;
+    })
+    .addCase(changeUserPassword.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
+    })
+    builder
+  .addCase(deactivateUserAccount.pending, (state) => {
+    state.loading = true;
+    state.error = null;
+  })
+  .addCase(deactivateUserAccount.fulfilled, (state) => {
+    state.loading = false;
+    state.user = null;
+    state.token = null;
+    state.isLoggedIn = false;
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userInfo');
+  })
+  .addCase(deactivateUserAccount.rejected, (state, action) => {
+    state.loading = false;
+    state.error = action.payload as string;
+  });
+
+  },
+});
 
 // Register user
 export const register = createAsyncThunk<UserResponse, Partial<User>>(
@@ -96,7 +209,7 @@ export const changeUserPassword = createAsyncThunk<void, { oldPassword: string; 
   }
 );
 
-// Delete user account
+// Delete user accounta
 export const deactivateUserAccount = createAsyncThunk<void>(
   'user/deleteUser',
   async (_, thunkAPI) => {
@@ -109,113 +222,8 @@ export const deactivateUserAccount = createAsyncThunk<void>(
 );
 
 
-export const userSlice = createSlice({
-  name: 'user',
-  initialState,
-  reducers: {
-    loginSuccess(state, action: PayloadAction<User>) {
-      state.user = action.payload;
-      state.isLoggedIn = true;
-    },
-    logout(state) {
-      state.user = null;
-      state.token = null;
-      state.isLoggedIn = false;
-      localStorage.removeItem('authToken');
-    },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(register.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(register.fulfilled, (state, action: PayloadAction<UserResponse>) => {
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-        state.isLoggedIn = true;
-        state.loading = false;
-        state.error = null;
-      })
-      .addCase(register.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      })
-      .addCase(login.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(login.fulfilled, (state, action: PayloadAction<UserResponse>) => {
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-        state.isLoggedIn = true;
-        state.loading = false;
-        state.error = null;
-      })
-      .addCase(login.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      })
-      .addCase(fetchUser.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchUser.fulfilled, (state, action: PayloadAction<User>) => {
-        state.user = action.payload;
-        state.loading = false;
-        state.error = null;
-      })
-      .addCase(fetchUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      })
-
-      builder
-    .addCase(updateUserAsync.pending, (state) => {
-      state.loading = true;
-      state.error = null;
-    })
-    .addCase(updateUserAsync.fulfilled, (state, action: PayloadAction<User>) => {
-      state.user = action.payload; 
-      state.loading = false;
-      state.error = null;
-    })
-    .addCase(updateUserAsync.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload as string; 
-    })
-
-    builder
-    .addCase(changeUserPassword.pending, (state) => {
-      state.loading = true;
-      state.error = null;
-    })
-    .addCase(changeUserPassword.fulfilled, (state) => {
-      state.loading = false;
-      state.error = null;
-    })
-    .addCase(changeUserPassword.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload as string;
-    })
-    .addCase(deactivateUserAccount.pending, (state) => {
-      state.loading = true;
-      state.error = null;
-    })
-    .addCase(deactivateUserAccount.fulfilled, (state) => {
-      state.user = null; 
-      state.isLoggedIn = false;
-      localStorage.removeItem('authToken');
-      state.loading = false;
-      state.error = null;
-    })
-    .addCase(deactivateUserAccount.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload as string;
-    });
-  },
-});
 
 export const { loginSuccess, logout } = userSlice.actions;
 export const selectUserInfo = (state: RootState) => state.user.user;
+
 export default userSlice.reducer;

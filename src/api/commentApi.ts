@@ -22,10 +22,18 @@ export const addComment = async (payload: AddCommentPayload): Promise<Comment> =
 };
 
 export const getCommentsByResume = async (resumeId: string): Promise<Comment[]> => {
-  const response = await api.get(`/api/comments/${resumeId}`, {
-     headers: { ...getAuthHeaders() },
-  });
-  return response.data;
+  try {
+    const response = await api.get(`/api/comments/${resumeId}`, {
+       headers: { ...getAuthHeaders() },
+    });
+    return response.data;
+
+  } catch (error: any) {
+    if (error.response && error.response.status === 404) {
+      return [];
+    }
+    throw error;
+  }
 };
 
 export const updateComment = async (payload: UpdateCommentPayload): Promise<Comment> => {
