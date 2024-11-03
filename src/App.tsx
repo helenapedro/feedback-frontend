@@ -1,42 +1,43 @@
+// App.tsx
 import React, { useEffect } from 'react';
 import { AppDispatch, RootState } from './redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { Outlet } from 'react-router-dom';
-import { fetchUserDetailsAsync, logoutUser, setUserId } from './redux/userSlice';
+import { BrowserRouter as Router, Route, Routes, Outlet } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-
 import NavBar from './components/NavBar';
 import Login from './pages/Login';
 import ResumeList from './pages/ResumeList';
 import ResumeDetails from './pages/ResumeDetails';
 import ResumeUploadForm from './components/ResumeUploadForm';
 import ProtectedRoute from './utils/ProtectedRoute';
+import UserDetails from './pages/UserDetails';
 import Logout from './components/Logout';
+import { fetchUser, logout } from './redux/userSlice';
 
 const App: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const userId = useSelector((state: RootState) => state.user.userId);
   const token = localStorage.getItem('authToken');
+  const userId = useSelector((state: RootState) => state.user.user?._id);
 
   useEffect(() => {
     if (token) {
       try {
-        const decodedToken: { userId: string, exp: number } = jwtDecode(token);
+        const decodedToken: { userId: string; exp: number } = jwtDecode(token);
+        const isTokenExpired = decodedToken.exp * 1000 < Date.now();
 
-        if (decodedToken.userId) {
-          dispatch(setUserId(decodedToken.userId));
-
-          dispatch(fetchUserDetailsAsync(decodedToken.userId)).unwrap().catch(() => {
-            dispatch(logoutUser());
+        if (isTokenExpired) {
+          dispatch(logout());
+        } else {
+          dispatch(fetchUser()).catch(() => {
+            dispatch(logout());
           });
         }
       } catch (error) {
         console.error("Token decoding error:", error);
-        dispatch(logoutUser());
+        dispatch(logout());
       }
     }
-  }, [dispatch, token]);
+  }, [dispatch, token, userId]);
 
   return (
     <Router>
@@ -47,19 +48,16 @@ const App: React.FC = () => {
         <Route path="/register" element={<Login />} />
         <Route path="/resumes" element={<ProtectedRoute element={<ResumesLayout />} />}>
           <Route index element={<ResumeList />} />
-          <Route path="/resumes/:id" element={<ResumeDetails />} />
-          <Route path="/resumes/upload" element={<ResumeUploadForm />} />
+          <Route path=":id" element={<ResumeDetails />} />
+          <Route path="upload" element={<ResumeUploadForm />} />
         </Route>
-        <Route path="/logout" element={<ProtectedRoute element={<Logout />}/>} />
+        <Route path="/profile" element={<ProtectedRoute element={<UserDetails />} />} />
+        <Route path="/logout" element={<ProtectedRoute element={<Logout />} />} />
       </Routes>
     </Router>
   );
 };
 
-const ResumesLayout = () => {
-  return (
-    <Outlet />
-  );
-};
+const ResumesLayout = () => <Outlet />;
 
 export default App;

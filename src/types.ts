@@ -1,13 +1,19 @@
 import mongoose from 'mongoose';
 
-export interface IUser {
+export interface User {
   _id: string;
   username: string;
   email: string;
-  password: string;
+  //password: string;
   isAdmin: boolean;
+  isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface UserResponse {
+  token: string;
+  user: User;
 }
 
 export interface IResume {

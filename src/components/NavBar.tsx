@@ -41,9 +41,9 @@ function CustomNavbar() {
                   <style.Nav.Link as={Link} to="/resumes">
                     <FontAwesomeIcon icon={icon.faFilePdf} /> Resumes
                   </style.Nav.Link>
-                  {/* <style.Nav.Link as={Link} to="/profile">
+                  <style.Nav.Link as={Link} to="/profile">
                     <FontAwesomeIcon icon={icon.faUser} /> Profile
-                  </style.Nav.Link> */}
+                  </style.Nav.Link>
                   <style.Nav.Link as={Link} to="/logout">
                     <FontAwesomeIcon icon={icon.faSignOutAlt} /> Logout
                   </style.Nav.Link>

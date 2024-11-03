@@ -1,8 +1,8 @@
-import axios, { AxiosResponse } from 'axios';
-import { IUser } from '../types';
+import axios from 'axios';
+import { UserResponse, User } from '../types';
 
-const API_URL = process.env.REACT_APP_API_URL;
-const TOKEN_KEY = 'authToken';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const TOKEN_KEY = 'token';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -20,24 +20,36 @@ api.interceptors.request.use((config) => {
 });
 
 const getAuthHeaders = () => {
-  const token = localStorage.getItem('authToken');
+  const token = localStorage.getItem(TOKEN_KEY);
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
-export const fetchUserDetails = async (userId: string): Promise<AxiosResponse<IUser>> => {
-  return api.get(`/api/auth/user/${userId}`, {
-    headers: { ...getAuthHeaders() },
+export const registerUser = async (userData: Partial<User>): Promise<UserResponse> => {
+  const response = await api.post('/api/auth/register', userData);
+  return response.data;
+};
+
+export const loginUser = async (email: string, password: string): Promise<UserResponse> => {
+  const response = await api.post('/api/auth/login', { email, password });
+  return response.data;
+};
+
+export const getUser = async (userId: string, token: string): Promise<User> => {
+  const response = await api.get(`/api/auth/user/${userId}`, {
+    headers: getAuthHeaders(),
   });
+  return response.data;
 };
 
-export const updateUserDetails = async (data: { username?: string; email?: string }): Promise<AxiosResponse<IUser>> => {
-  return api.put(`/api/auth/user/update`, data);
+export const updateUser = async (userData: Partial<User>): Promise<User> => {
+  const response = await api.put('/api/auth/user/update', userData, {
+    headers: getAuthHeaders(),
+  });
+  return response.data;
 };
 
-export const updateUserPassword = async (data: { currentPassword: string; newPassword: string }): Promise<AxiosResponse<void>> => {
-  return api.post(`/api/auth/user/change-password`, data);
-};
-
-export const deleteUserAccount = async (): Promise<AxiosResponse<void>> => {
-  return api.delete(`/api/auth/user/delete`);
+export const deleteUser = async (): Promise<void> => {
+  await api.delete('/api/auth/user/delete', {
+    headers: getAuthHeaders(),
+  });
 };

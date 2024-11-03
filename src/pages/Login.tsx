@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../api/authApi';
-import { loginUserAsync } from '../redux/userSlice';
+import { login } from '../redux/userSlice';
 import LoginForm from '../forms/loginForm';
 import { RootState, AppDispatch } from '../redux/store';
 
@@ -21,7 +21,7 @@ const Login = () => {
     setError('');
   
     try {
-      const resultAction = await dispatch(loginUserAsync({ email, password })).unwrap();
+      const resultAction = await dispatch(login({ email, password })).unwrap();
       
       if (resultAction.user) {
         navigate('/resumes'); 

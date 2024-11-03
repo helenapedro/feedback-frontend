@@ -1,224 +1,134 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { loginUser as apiLoginUser } from '../api/authApi';
-import * as userapi from '../api/userApi';
-import * as adminapi from '../api/adminApi';
-import { IUser } from '../types';
+import { registerUser, loginUser, getUser } from '../api/userApi';
+import { User, UserResponse } from '../types';
 import { RootState } from './store';
 
 interface UserState {
-  isLoggedIn: boolean;
-  userId: string | null;
-  user: IUser | null;
-  users: IUser[];
-  adminStatus: string;
-  updateUserStatus: string, 
+  user: User | null;
+  token: string | null;
   loading: boolean;
   error: string | null;
+  isLoggedIn: boolean;
 }
 
 const initialState: UserState = {
-  isLoggedIn: false,
-  userId: null,
-  user: null, 
-  users: [],
-  adminStatus: 'idle',
-  updateUserStatus: 'idle',
+  user: null,
+  token: localStorage.getItem('authToken'),
   loading: false,
   error: null,
+  isLoggedIn: !!localStorage.getItem('authToken'),
 };
 
-const getErrorMessage = (error: any): string => 
-  error.response?.data?.message || 'An error occurred';
+// Register user
+export const register = createAsyncThunk<UserResponse, Partial<User>>(
+  'user/register',
+  async (userData, thunkAPI) => {
+    try {
+      return await registerUser(userData);
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response?.data?.message || 'Registration failed');
+    }
+  }
+);
 
-const userSlice = createSlice({
+// Login user
+export const login = createAsyncThunk<UserResponse, { email: string; password: string }>(
+  'user/login',
+  async ({ email, password }, thunkAPI) => {
+    try {
+      const data = await loginUser(email, password);
+      localStorage.setItem('authToken', data.token);
+      return data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response?.data?.message || 'Login failed');
+    }
+  }
+);
+
+// Fetch user data
+export const fetchUser = createAsyncThunk<User>(
+  'user/fetchUser',
+  async (_, thunkAPI) => {
+    try {
+      const token = localStorage.getItem('authToken');
+      const state = thunkAPI.getState() as RootState;
+      const userId = state.user.user?._id;
+
+      if (!token || !userId) {
+        throw new Error('No valid token or user ID found');
+      }
+
+      const user = await getUser(userId, token);
+      return user;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
+
+export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    updateUser: (state, action: PayloadAction<IUser>) => {
+    loginSuccess(state, action: PayloadAction<User>) {
       state.user = action.payload;
+      state.isLoggedIn = true;
     },
-    setUser: (state, action: PayloadAction<IUser>) => {
-      state.user = action.payload;
-    },
-    setUserId: (state, action: PayloadAction<string>) => {
-      state.userId = action.payload;
-    },
-    resetUpdateStatus(state) {
-      state.updateUserStatus = 'idle';
-    },
-    logoutUser: (state) => {
-      state.isLoggedIn = false;
-      state.userId = null;
+    logout(state) {
       state.user = null;
+      state.token = null;
+      state.isLoggedIn = false;
       localStorage.removeItem('authToken');
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(loginUserAsync.pending, (state) => {
+      .addCase(register.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(loginUserAsync.fulfilled, (state, action) => {
-        state.loading = false;
-        state.isLoggedIn = true;
-        state.userId = action.payload.user._id;
+      .addCase(register.fulfilled, (state, action: PayloadAction<UserResponse>) => {
         state.user = action.payload.user;
-        localStorage.setItem('authToken', action.payload.token);
+        state.token = action.payload.token;
+        state.isLoggedIn = true;
+        state.loading = false;
+        state.error = null;
       })
-      .addCase(loginUserAsync.rejected, (state, action) => {
+      .addCase(register.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       })
-
-      .addCase(fetchUserDetailsAsync.pending, (state) => {
+      .addCase(login.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
-      .addCase(fetchUserDetailsAsync.fulfilled, (state, action) => {
+      .addCase(login.fulfilled, (state, action: PayloadAction<UserResponse>) => {
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        state.isLoggedIn = true;
         state.loading = false;
-        state.user = action.payload;
+        state.error = null;
       })
-      .addCase(fetchUserDetailsAsync.rejected, (state, action) => {
+      .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       })
-
-      .addCase(updateUserDetailsAsync.pending, (state) => {
-        state.updateUserStatus = 'loading';
-      })
-      .addCase(updateUserDetailsAsync.fulfilled, (state, action) => {
-        state.updateUserStatus = 'succeeded';
-        state.user = action.payload;
-      })
-      .addCase(updateUserDetailsAsync.rejected, (state, action) => {
-        state.updateUserStatus = 'failed';
-        state.error = action.payload as string;
-      })
-
-      .addCase(updateUserPasswordAsync.pending, (state) => {
+      .addCase(fetchUser.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
-      .addCase(updateUserPasswordAsync.fulfilled, (state) => {
+      .addCase(fetchUser.fulfilled, (state, action: PayloadAction<User>) => {
+        state.user = action.payload;
         state.loading = false;
+        state.error = null;
       })
-      .addCase(updateUserPasswordAsync.rejected, (state, action) => {
+      .addCase(fetchUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
-      })
-
-      .addCase(fetchAllUsersAsync.pending, (state) => {
-        state.adminStatus = 'loading';
-      })
-      .addCase(fetchAllUsersAsync.fulfilled, (state, action) => {
-        state.adminStatus = 'succeeded';
-        state.users = action.payload;
-      })
-      .addCase(fetchAllUsersAsync.rejected, (state, action) => {
-        state.adminStatus = 'failed';
-        state.error = action.payload as string;
-      })
-
-      .addCase(deactivateUserAsync.pending, (state) => {
-        state.adminStatus = 'loading';
-      })
-      .addCase(deactivateUserAsync.fulfilled, (state) => {
-        state.adminStatus = 'succeeded';
-      })
-      .addCase(deactivateUserAsync.rejected, (state, action) => {
-        state.adminStatus = 'failed';
         state.error = action.payload as string;
       });
   },
 });
 
-export const loginUserAsync = createAsyncThunk<
-  { token: string; user: IUser }, 
-  { email: string; password: string },
-  { rejectValue: string }
-  >(
-    'user/loginUser', 
-    async ({ email, password }, { rejectWithValue }) => {
-      try {
-        const response = await apiLoginUser(email, password);
-        return response.data;
-      } catch (error: any) {
-        return rejectWithValue('Login failed. Please check your credentials.');
-      }
-  }
-);
-
-export const fetchUserDetailsAsync = createAsyncThunk<IUser, string, { rejectValue: string }>(
-  'user/fetchUserDetails',
-  async (userId, { rejectWithValue }) => {
-    try {
-      const response = await userapi.fetchUserDetails(userId);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(getErrorMessage(error));
-    }
-  }
-);
-
-export const updateUserDetailsAsync = createAsyncThunk<
-  IUser,
-  { data: { username?: string; email?: string } },
-  { rejectValue: string }
->(
-  'user/updateUserDetails', 
-  async ({ data }, { rejectWithValue }) => {
-    try {
-      const response = await userapi.updateUserDetails(data);
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue('Failed to update user details.');
-    }
-  }
-);
-
-export const updateUserPasswordAsync = createAsyncThunk<
-  void,
-  { currentPassword: string; newPassword: string },
-  { rejectValue: string }
->(
-  'user/updateUserPassword', 
-  async ({ currentPassword, newPassword }, { rejectWithValue }) => {
-    try {
-      await userapi.updateUserPassword({ currentPassword, newPassword });
-    } catch (error: any) {
-      return rejectWithValue('Failed to update password.');
-    }
-  }
-);
-
-export const fetchAllUsersAsync = createAsyncThunk<IUser[], void, { rejectValue: string }>(
-  'user/fetchAllUsers',
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await adminapi.fetchAllUsers();
-      return response.data;
-    } catch (error) {
-      return rejectWithValue('Failed to fetch users.');
-    }
-  }
-);
-
-export const deactivateUserAsync = createAsyncThunk<
-  void,
-  string,
-  { rejectValue: string }>
-  ('user/deactivateUser', async (userId, { rejectWithValue }) => {
-    try {
-      await adminapi.deactivateUser(userId);
-    } catch (error) {
-      return rejectWithValue('Failed to deactivate user.');
-    }
-  }
-);
-
-export const selectIsAuthenticated = (state: RootState) => state.user.isLoggedIn;
+export const { loginSuccess, logout } = userSlice.actions;
 export const selectUserInfo = (state: RootState) => state.user.user;
-export const selectUserId = (state: RootState) => state.user.userId;
-export const selectAdminUsers = (state: RootState) => state.user.users;
-
-export const { updateUser,setUser, setUserId, resetUpdateStatus, logoutUser } = userSlice.actions;
 export default userSlice.reducer;
