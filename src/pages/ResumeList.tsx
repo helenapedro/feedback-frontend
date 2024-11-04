@@ -60,7 +60,7 @@ const ResumeList = () => {
         <p>No resumes found.</p>
       ) : (
         resumes.map((resume) => (
-          <style.Card key={resume._id.toString()} className="mb-3">
+          <style.Card key={resume._id.toString()} className="mb-3" >
             <style.Card.Body>
               <Link to={`/resumes/${resume._id}`}>
                 <style.Button variant="primary" style={{ marginBottom: '8px' }}>View Details</style.Button>

@@ -9,14 +9,9 @@ import { Container } from 'react-bootstrap';
 const About = () => {
   return (
      <Container>
-          <Card 
-               className="text-center mt-4 p-4 shadow" 
-               style={{ maxWidth: '600px', margin: '0 auto', borderRadius: '8px' }}>
-               <Card.Header 
-                    as="h3" 
-                    style={{ backgroundColor: '#007bff', color: '#fff', borderRadius: '8px 8px 0 0' }}
-                    >
-                    About This Application
+          <Card className="text-center mt-4 p-4 shadow" style={{ maxWidth: '600px', margin: '0 auto', borderRadius: '8px' }}>
+               <Card.Header as="h3" style={{ backgroundColor: '#007bff', color: '#fff', borderRadius: '8px 8px 0 0' }}
+                    > About This Application
                </Card.Header>
                <Card.Body>
                     <Card.Text>

@@ -49,10 +49,10 @@ const ProfilePage: React.FC = () => {
   };
 
   return (
-     <Container className="mt-5"> 
+     <Container className="mt-5" style={{ maxWidth: '700px', margin: '0 auto', borderRadius: '8px' }}> 
           <Card> 
-               <Card.Header className="text-center"> 
-                    <Card.Title>{formData.username}'s' Profile</Card.Title> 
+               <Card.Header className="text-center" as="h3" style={{ backgroundColor: '#007bff', color: '#fff', borderRadius: '8px 8px 0 0' }}> 
+                    <Card.Title>Profile</Card.Title> 
                </Card.Header> 
                <Card.Body> 
                     <Form> 
@@ -85,7 +85,7 @@ const ProfilePage: React.FC = () => {
                          {isEditing && ( 
                               <> 
                                    <Button variant="link" onClick={() => setShowChangePassword(!showChangePassword)} className="mt-3"> 
-                                        <FontAwesomeIcon icon={faKey} /> {showChangePassword ? 'Cancel Password Change' : 'Change Password'} 
+                                        <FontAwesomeIcon icon={faKey} /> {showChangePassword ? 'Cancel' : 'Change Password'} 
                                    </Button> {showChangePassword && ( 
                                         <div className="password-change-section mt-3"> 
                                              <Form.Group controlId="formCurrentPassword"> 
@@ -115,29 +115,29 @@ const ProfilePage: React.FC = () => {
                                                   onClick={handlePasswordChange} 
                                                   variant="warning" 
                                                   className="mt-3"
-                                                  > Save New Password 
+                                                  > Save 
                                              </Button> 
                                         </div> 
                                    )} 
                               </> 
                          )} 
-                         <div className="profile-buttons mt-4 d-flex justify-content-between"> 
+                         <div className="mt-4 d-flex justify-content-between" > 
                               {isEditing ? ( 
                                    <> 
-                                        <Button onClick={handleSaveChanges} variant="success"> 
-                                             <FontAwesomeIcon icon={faSave} /> Save Changes 
+                                        <Button onClick={handleSaveChanges} variant="success" style={{ marginRight: '8px' }}> 
+                                             <FontAwesomeIcon icon={faSave} /> Save 
                                         </Button> 
-                                        <Button variant="secondary" onClick={handleToggleEdit}> 
+                                        <Button variant="secondary" onClick={handleToggleEdit} style={{ marginRight: '8px' }}> 
                                              Cancel 
                                         </Button> 
                                    </> 
                                    ) : ( 
                                         <Button onClick={handleToggleEdit} variant="primary"> 
-                                             <FontAwesomeIcon icon={faEdit} /> Edit Profile 
+                                             <FontAwesomeIcon icon={faEdit} /> Edit 
                                         </Button> 
                               )} 
                               <Button onClick={handleDeleteAccount} variant="danger"> 
-                                   <FontAwesomeIcon icon={faTrash} /> Delete Account 
+                                   <FontAwesomeIcon icon={faTrash} /> Delete 
                               </Button> 
                          </div> 
                     </Form> 

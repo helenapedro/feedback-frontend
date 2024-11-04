@@ -44,12 +44,12 @@ const ResumeDetails: React.FC = () => {
           {isImage ? (
             <ImageViewer url={resume.url} />
           ) : (
-            <CardBody style={viewerContainerStyle}>
+            <CardBody>
               <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js`}>
                 <Viewer
                   fileUrl={resume.url}
-                  defaultScale={SpecialZoomLevel.PageFit}
-                  onDocumentLoad={(e) => setPageCount(e.doc.numPages)} 
+                  defaultScale={SpecialZoomLevel.PageWidth}
+                  onDocumentLoad={(e) => setPageCount(e.doc.numPages)}
                 />
               </Worker>
             </CardBody>
