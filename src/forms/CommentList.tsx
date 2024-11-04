@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch, useAppSelector } from '../redux/store';
 import { fetchComments, removeComment, updateExistingComment } from '../redux/commentSlice';
-import { ListGroup, Button, Spinner, Alert, Container, Row, Col, CardText, CardTitle, Card } from 'react-bootstrap';
+import { ListGroup, Button, Spinner, Alert, Row, Col, CardText, CardTitle, Card } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { calculateDaysPassed } from '../utils/Days';

@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { registerUser, loginUser, getUser, updateUser, changePassword, deleteUser } from '../api/userApi';
 import { User, UserResponse } from '../types';
 import { RootState } from './store';
-import { useSelector } from 'react-redux';
 
 interface UserState {
   user: User | null;
