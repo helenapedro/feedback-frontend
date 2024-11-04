@@ -26,12 +26,6 @@ const ResumeDetails: React.FC = () => {
 
   const isImage = ['jpg', 'jpeg', 'png'].includes(resume.format);
 
-  const viewerContainerStyle = {
-    height: pageCount === 1 ? '500px' : '750px',
-    border: '1px solid #ccc',
-    marginTop: '20px',
-  };
-
   return (
     <Container>
       <Card>
