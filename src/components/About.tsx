@@ -15,7 +15,7 @@ const About = () => {
                </Card.Header>
                <Card.Body>
                <Card.Text>
-                    Welcome to <strong>Resume Feedback</strong>, a collaborative platform 
+                    Welcome to <strong>Resume Feedback</strong>, a collaborative web application 
                     where job seekers can give and receive valuable feedback on their resumes! 
                     Designed for those who want honest, constructive insights from peers, Resume Feedback 
                     empowers users to fine-tune their resumes through community-driven feedback.
