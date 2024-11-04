@@ -17,6 +17,7 @@ import EditProfile from './forms/EditProfileForm';
 import ChangePassword from './forms/ChangePasswordForm';
 import DeleteAccount from './forms/DeleteAccountForm';
 import ProfilePage from './pages/ProfilePage';
+import About from './components/About';
 
 const App: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -49,6 +50,7 @@ const App: React.FC = () => {
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Login />} />
+        <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Login />} />
 

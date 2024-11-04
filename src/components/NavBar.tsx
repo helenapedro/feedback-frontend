@@ -26,9 +26,9 @@ function CustomNavbar() {
             <style.Nav className="me-auto">
               {!isLoggedIn ? (
                 <>
-                 {/*  <Nav.Link as={Link} to="/about">
+                  <style.Nav.Link as={Link} to="/about">
                     <FontAwesomeIcon icon={icon.faInfoCircle} /> About
-                  </Nav.Link> */}
+                  </style.Nav.Link>
                   <style.Nav.Link as={Link} to="/login">
                     <FontAwesomeIcon icon={icon.faSignIn} /> Login
                   </style.Nav.Link>
