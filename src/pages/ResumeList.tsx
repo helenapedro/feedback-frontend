@@ -46,7 +46,7 @@ const ResumeList = () => {
   if (error) return <div>Error fetching resumes: {error}</div>;
 
   return (
-    <style.Container>
+    <style.Container style={{ maxWidth: '900px', margin: '0 auto', borderRadius: '8px' }}>
       <style.Card>
         <style.CardBody>
           <Link to="/resumes/upload">

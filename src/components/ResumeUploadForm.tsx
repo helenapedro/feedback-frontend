@@ -49,13 +49,13 @@ const ResumeUploadForm = () => {
   };
 
   return (
-    <style.Container>
-      <style.Card>
+    <style.Container style={{ maxWidth: '700px', margin: '0 auto', borderRadius: '8px' }}>
+      <style.Card >
         <style.CardBody>
           <style.Form onSubmit={handleSubmit}>
             <style.Form.Group controlId="formFile">
-              <style.Form.Label style={{ color: '#007bff' }}>
-                <FontAwesomeIcon icon={icon.faFilePdf} style={{ color: '#007bff' }} /> Upload Resume
+              <style.Form.Label as="h3" style={{ backgroundColor: '#007bff', color: '#fff', borderRadius: '8px 8px 0 0' }}>
+                <FontAwesomeIcon icon={icon.faFilePdf} style={{ marginLeft: '8px' }} /> Upload Resume
               </style.Form.Label>
               <style.Form.Control type="file" accept=".pdf, .docx, .jpg, .jpeg, .png" onChange={handleFileChange} />
             </style.Form.Group>
