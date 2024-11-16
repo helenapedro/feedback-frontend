@@ -65,6 +65,7 @@ const ResumeList = () => {
               <Link to={`/resumes/${resume._id}`}>
                 <style.Button variant="primary" style={{ marginBottom: '8px' }}>View Details</style.Button>
               </Link>
+              <style.Card.Text>{resume.description}</style.Card.Text>
               {resume.format === 'pdf' ? (
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
                   <Viewer fileUrl={resume.url} defaultScale={SpecialZoomLevel.PageWidth} pageLayout={pageLayout} />

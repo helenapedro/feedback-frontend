@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 export interface User {
   _id: string;
+  id: string;
   username: string;
   email: string;
   //password: string;
@@ -18,8 +19,15 @@ export interface UserResponse {
 
 export interface IResume {
   _id: string; 
-  posterId: string; 
+  posterId: {
+    _id: string; 
+    username: string; 
+    email: string; 
+    isAdmin: boolean; 
+    isActive: boolean
+  } 
   format: 'pdf' | 'docx' | 'jpg' | 'jpeg' | 'png'; 
+  description: string;
   url: string;
   createdAt: Date; 
   updatedAt: Date; 

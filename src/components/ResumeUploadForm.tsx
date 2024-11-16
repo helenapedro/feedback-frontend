@@ -12,6 +12,7 @@ const ResumeUploadForm = () => {
   const navigate = useNavigate();
   const [file, setFile] = useState<File | null>(null);
   const [format, setFormat] = useState('pdf'); 
+  const [description, setDescription] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -36,10 +37,11 @@ const ResumeUploadForm = () => {
     }
     setLoading(true);
     try {
-      await dispatch(uploadResumeAsync({ file, format })).unwrap();
+      await dispatch(uploadResumeAsync({ file, format, description })).unwrap();
       navigate('/resumes');
       setFile(null);
-      setFormat('pdf'); 
+      setFormat('pdf');
+      setDescription(''); 
     } catch (err) {
       console.error(err);
       setError('Upload failed');
@@ -68,6 +70,16 @@ const ResumeUploadForm = () => {
                 <option value="png">PNG</option>
               </style.Form.Control>
             </style.Form.Group>
+            <style.Form.Group controlId="formDescription">
+              <style.Form.Label>Description</style.Form.Label>
+              <style.Form.Control
+                as="textarea"
+                rows={3}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Add a brief description of your resume (optional)"
+              />
+          </style.Form.Group>
             <style.Button variant="primary" type="submit"  style={{ marginTop: '8px' }} disabled={loading}>
               {loading ? <style.Spinner animation="border" size="sm" /> : 'Upload'}
             </style.Button>

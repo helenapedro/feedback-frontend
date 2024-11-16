@@ -81,11 +81,11 @@ const CommentList: React.FC<CommentListProps> = ({ resumeId }) => {
                   <Col xs={3} className="text-end" style={{ overflow: 'hidden' }}>
                     {editCommentId !== comment._id && (
                       <Button variant="link" onClick={() => handleEdit(comment)}>
-                        <FontAwesomeIcon icon={faEdit} /> Edit
+                        <FontAwesomeIcon icon={faEdit} />
                       </Button>
                     )}
                     <Button variant="link" onClick={() => handleDelete(comment._id)}>
-                      <FontAwesomeIcon icon={faTrash} /> Delete
+                      <FontAwesomeIcon icon={faTrash} />
                     </Button>
                   </Col>
                 )}
