@@ -33,13 +33,15 @@ const Login = () => {
   };
   
   const handleRegister = async (username: string, email: string, password: string) => {
+    setError('');
     try {
       await registerUser(username, email, password);
       console.log('Registration successful');
       navigate('/resumes');
-    } catch (error) {
-      setError('Registration failed. Please try again.');
-      console.error('Registration error:', error);
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Registration failed. Please try again.';
+      setError(errorMessage);
+      console.error('Registration error:', errorMessage);
     }
   };
 
