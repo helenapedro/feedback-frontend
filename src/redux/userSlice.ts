@@ -187,16 +187,15 @@ export const updateUserAsync = createAsyncThunk<User, Partial<User>>(
       if (!token) {
         return thunkAPI.rejectWithValue('No valid token found');
       }
-
       const user = await updateUser(userData);
       return user;
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.response?.data?.message || 'Failed to update user');
+    }  catch (error: any) {
+      const errorMessage = error || 'Failed to update user';
+      return thunkAPI.rejectWithValue(errorMessage);
     }
   }
 );
 
-// Change user password
 export const changeUserPassword = createAsyncThunk<void, { oldPassword: string; newPassword: string }>(
   'user/changePassword',
   async ({ oldPassword, newPassword }, thunkAPI) => {
@@ -208,7 +207,6 @@ export const changeUserPassword = createAsyncThunk<void, { oldPassword: string; 
   }
 );
 
-// Delete user accounta
 export const deactivateUserAccount = createAsyncThunk<void>(
   'user/deleteUser',
   async (_, thunkAPI) => {
