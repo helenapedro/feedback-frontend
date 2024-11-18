@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../redux/store';
 import { updateResumeDescriptionAsync } from '../redux/resumeSlice';
+import useResumeActions from '../middleware/useResumeActions';
 
 interface ResumeDetailsFormProps {
   resumeId: string;
@@ -15,9 +15,10 @@ const ResumeDetailsForm: React.FC<ResumeDetailsFormProps> = ({
   initialDescription,
   onSuccess,
 }) => {
-  const dispatch = useDispatch<AppDispatch>();
+  const { id } = useParams<{ id: string }>();
   const [newDescription, setNewDescription] = useState(initialDescription);
   const [isEditing, setIsEditing] = useState(false);
+  const { updateDescription } = useResumeActions(id);
 
   const handleDescriptionUpdate = async () => {
     if (newDescription.trim() === initialDescription) {
@@ -26,9 +27,7 @@ const ResumeDetailsForm: React.FC<ResumeDetailsFormProps> = ({
     }
 
     try {
-      const actionResult = await dispatch(
-        updateResumeDescriptionAsync({ id: resumeId, description: newDescription.trim() })
-      );
+      const actionResult = await updateDescription(newDescription.trim());
 
       if (updateResumeDescriptionAsync.fulfilled.match(actionResult)) {
         alert('Resume description updated successfully.');
