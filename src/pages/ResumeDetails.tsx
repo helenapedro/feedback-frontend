@@ -58,12 +58,20 @@ const ResumeDetails: React.FC = () => {
     }
   };
 
-  const handleResumeDelete = async () => {
+  const handleResumeDelete = () => {
     if (id) {
-      await dispatch(deleteResumeAsync(id));
-      navigate('/resumes');
+      const userConfirmed = window.confirm(
+        "Are you sure you want to delete this resume? This action cannot be undone."
+      );
+  
+      if (userConfirmed) {
+        dispatch(deleteResumeAsync(id)).then(() => {
+          navigate('/resumes');
+        });
+      }
     }
   };
+  
 
   const handleDownloadResume = () => {
     if (!resume?.url) {
