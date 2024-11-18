@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ResumeViewer from './ResumeViewer';
 import ResumeDetailsForm from '../forms/ResumeDetailsForm';
 import { Link } from 'react-router-dom';
@@ -25,6 +25,8 @@ const ResumeViewerSection: React.FC<ResumeViewerSectionProps> = ({
      handleDownloadResume,
      deleteResume,
  }) => {
+     const [pageCount, setPageCount] = useState<number>(0);
+
      if (!resume) return <div>No resume found.</div>;
 
      return (
@@ -50,7 +52,11 @@ const ResumeViewerSection: React.FC<ResumeViewerSectionProps> = ({
                               onSuccess={() => window.location.reload()}
                               />
                          )}
-                         <ResumeViewer url={resume.url} format={resume.format} />
+                         <ResumeViewer 
+                              url={resume.url} 
+                              format={resume.format} 
+                              onDocumentLoad={(pageCount) => setPageCount(pageCount)}
+                         />
                     </styles.Card.Body>
                     {isOwner && (
                          <styles.Card.Footer>

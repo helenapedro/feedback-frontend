@@ -7,10 +7,10 @@ import '@react-pdf-viewer/core/lib/styles/index.css';
 interface ResumeViewerProps {
     url: string;
     format: string;
-    //onDocumentLoad?: (pageCount: number) => void;
+    onDocumentLoad?: (pageCount: number) => void;
 }
 
-const ResumeViewer: React.FC<ResumeViewerProps> = ({ url, format }) => {
+const ResumeViewer: React.FC<ResumeViewerProps> = ({ url, format, onDocumentLoad }) => {
     const isImage = ['jpg', 'jpeg', 'png'].includes(format);
 
     if (isImage) {
@@ -23,7 +23,7 @@ const ResumeViewer: React.FC<ResumeViewerProps> = ({ url, format }) => {
                 <Viewer
                     fileUrl={url}
                     defaultScale={SpecialZoomLevel.PageWidth}
-                    //onDocumentLoad={(e) => onDocumentLoad?.(e.doc.numPages)}
+                    onDocumentLoad={(e) => onDocumentLoad?.(e.doc.numPages)}
                 />
             </Worker>
         </div>
