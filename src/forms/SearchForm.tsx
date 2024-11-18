@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import * as style from 'react-bootstrap/';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 interface SearchFormProps {
   onSearch: (format: string, createdAt: string) => void;
@@ -36,7 +36,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
                onChange={(e) => setSearchDate(e.target.value)}
           /> */}
           <style.Button variant="outline-light" onClick={handleSearch} style={{ color: '#007acc' }}>
-               <FontAwesomeIcon icon={faBars} /> Search
+               <FontAwesomeIcon icon={faSearch} /> Search
           </style.Button>
      </style.Form>
   );

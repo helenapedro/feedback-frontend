@@ -2,7 +2,6 @@ import React, { FormEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../redux/store';
 import { addNewComment, fetchComments, updateExistingComment } from '../redux/commentSlice';
-//import { AddCommentPayload } from '../types';
 import * as style from 'react-bootstrap/';
 
 interface CommentFormProps {

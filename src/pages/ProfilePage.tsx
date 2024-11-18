@@ -36,8 +36,8 @@ const ProfilePage: React.FC = () => {
           try {
                const result = await dispatch(updateUserAsync({ username: formData.username, email: formData.email })).unwrap();
                if (result) {
-               setSuccess('Profile updated successfully.');
-               window.location.reload();
+                    setSuccess('Profile updated successfully.');
+                    window.location.reload();
                }
                setIsEditing(false);
           } catch (error: any) {

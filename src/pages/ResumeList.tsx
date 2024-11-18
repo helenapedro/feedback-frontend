@@ -8,6 +8,8 @@ import { Worker, Viewer, PageLayout, Rect, SpecialZoomLevel } from '@react-pdf-v
 import Pagination from '../utils/Pagination';
 import SearchForm from '../forms/SearchForm';
 import '@react-pdf-viewer/core/lib/styles/index.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDownload, faEye, faFileUpload } from '@fortawesome/free-solid-svg-icons';
 
 const ResumeList = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -50,7 +52,9 @@ const ResumeList = () => {
       <style.Card>
         <style.CardBody>
           <Link to="/resumes/upload">
-            <style.Button variant="primary" className="mb-3">Upload New Resume</style.Button>
+            <style.Button variant="primary" className="mb-3">
+              <FontAwesomeIcon icon={faFileUpload} /> Upload Resume
+            </style.Button>
           </Link>
           <SearchForm onSearch={handleSearch} />
         </style.CardBody>
@@ -61,11 +65,24 @@ const ResumeList = () => {
       ) : (
         resumes.map((resume) => (
           <style.Card key={resume._id.toString()} className="mb-3" >
+            <style.Card.Body style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+              <div>
+                <Link to={`/resumes/${resume._id}`}>
+                  <style.Button variant="primary" style={{ marginBottom: '8px' }}>
+                    <FontAwesomeIcon icon={faEye} />
+                  </style.Button>
+                </Link>
+              </div>
+              <div style={{ flex: 1, textAlign: 'center' }}>
+                <style.Card.Text>{resume.description}</style.Card.Text>
+              </div>
+              <div>
+                <style.Button variant="secondary" style={{ marginBottom: '8px'}} as="a" href={resume.url} target='_blank' download> 
+                  <FontAwesomeIcon icon={faDownload} />
+                </style.Button>
+              </div>
+            </style.Card.Body>
             <style.Card.Body>
-              <Link to={`/resumes/${resume._id}`}>
-                <style.Button variant="primary" style={{ marginBottom: '8px' }}>View Details</style.Button>
-              </Link>
-              <style.Card.Text>{resume.description}</style.Card.Text>
               {resume.format === 'pdf' ? (
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
                   <Viewer fileUrl={resume.url} defaultScale={SpecialZoomLevel.PageWidth} pageLayout={pageLayout} />

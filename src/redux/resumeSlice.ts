@@ -33,9 +33,9 @@ export const fetchResumesAsync = createAsyncThunk<IResumesResponse, { page?: num
   }
 );
 
-export const updateResumeDescriptionAsync = createAsyncThunk<IResume, { id: string; description: string }>(
+export const updateResumeDescriptionAsync = createAsyncThunk<IResume, { id: string; description: string; }>(
   'resumes/updateResumeDescription',
-  async ({ id, description }) => {
+  async ({ id, description}) => {
     const response = await api.updateResumeDescription(id, description);
     return response;
   }
