@@ -90,74 +90,86 @@ const ResumeDetails: React.FC = () => {
   const isImage = ['jpg', 'jpeg', 'png'].includes(resume.format);
 
   return (
-    <Container className="mt-4" style={{ maxWidth: '900px' }}>
+    <Container className="mt-4" style={{ maxWidth: '1200px' }}>
       {notification && (
         <div className={`alert alert-${notification.type === 'success' ? 'success' : 'danger'}`}>
           {notification.message}
         </div>
       )}
-      <Card className="shadow-sm">
-        <Card.Header className="d-flex justify-content-between">
-          <Link to="/resumes">
-            <Button variant="secondary">
-              <FontAwesomeIcon icon={faArrowLeft} />
-            </Button>
-          </Link>
-          <Button variant="secondary" onClick={handleDownloadResume}>
-            <FontAwesomeIcon icon={faDownload} />
-          </Button>
-        </Card.Header>
-        <Card.Body>
-          <Card.Title>{resume.description}</Card.Title>
-
-          {isOwner && (
-            <Form className="mt-3">
-              <Form.Group>
-                <Form.Label>Update Description</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={newDescription}
-                  onChange={(e) => setNewDescription(e.target.value)}
-                  disabled={isEditing}
-                />
-              </Form.Group>
-              <Button
-                className="mt-2"
-                variant="warning"
-                onClick={handleDescriptionUpdate}
-                disabled={newDescription === resume.description || isEditing}
-              >
-                Update
+      <Row>
+        {/* Right Section: Resume Viewer (displayed first on small screens) */}
+        <Col md={8} className="order-1 order-md-2">
+          <Card className="shadow-sm">
+            <Card.Header className="d-flex justify-content-between">
+              <Link to="/resumes">
+                <Button variant="secondary">
+                  <FontAwesomeIcon icon={faArrowLeft} />
+                </Button>
+              </Link>
+              <Button variant="secondary" onClick={handleDownloadResume}>
+                <FontAwesomeIcon icon={faDownload} />
               </Button>
-            </Form>
-          )}
+            </Card.Header>
+            <Card.Body>
+              <Card.Title>{resume.description}</Card.Title>
 
-          <div className="mt-3">
-            {isImage ? (
-              <ImageViewer url={resume.url} />
-            ) : (
-              <div style={{ border: '1px solid #e3e6f0', padding: '15px', backgroundColor: '#ffffff' }}>
-                <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
-                  <Viewer
-                    fileUrl={resume.url}
-                    defaultScale={SpecialZoomLevel.PageWidth}
-                    onDocumentLoad={(e) => setPageCount(e.doc.numPages)}
-                  />
-                </Worker>
+              {isOwner && (
+                <Form className="mt-3">
+                  <Form.Group>
+                    <Form.Label>Update Description</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={newDescription}
+                      onChange={(e) => setNewDescription(e.target.value)}
+                      disabled={isEditing}
+                    />
+                  </Form.Group>
+                  <Button
+                    className="mt-2"
+                    variant="warning"
+                    onClick={handleDescriptionUpdate}
+                    disabled={newDescription === resume.description || isEditing}
+                  >
+                    Update
+                  </Button>
+                </Form>
+              )}
+
+              <div className="mt-3">
+                {isImage ? (
+                  <ImageViewer url={resume.url} />
+                ) : (
+                  <div style={{ border: '1px solid #e3e6f0', padding: '15px', backgroundColor: '#ffffff' }}>
+                    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
+                      <Viewer
+                        fileUrl={resume.url}
+                        defaultScale={SpecialZoomLevel.PageWidth}
+                        onDocumentLoad={(e) => setPageCount(e.doc.numPages)}
+                      />
+                    </Worker>
+                  </div>
+                )}
               </div>
+            </Card.Body>
+            {isOwner && (
+              <Card.Footer>
+                <Button variant="danger" onClick={handleResumeDelete}>
+                  <FontAwesomeIcon icon={faTrash} /> Delete
+                </Button>
+              </Card.Footer>
             )}
-          </div>
-        </Card.Body>
-        <Card.Footer>
+          </Card>
+        </Col>
+
+        {/* Left Section: Comments */}
+        <Col md={4} className="order-2 order-md-1 border-end">
+          <h5 className="mb-3">Comments</h5>
           {id && <CommentForm resumeId={id} />}
-          {id && <CommentList resumeId={id} />}
-          {isOwner && (
-            <Button variant="danger" className="mt-3" onClick={handleResumeDelete}>
-              <FontAwesomeIcon icon={faTrash} /> Delete
-            </Button>
-          )}
-        </Card.Footer>
-      </Card>
+          <div className="mt-4">
+            {id && <CommentList resumeId={id} />}
+          </div>
+        </Col>
+      </Row>
     </Container>
   );
 };
