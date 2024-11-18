@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../redux/store';
-import { loadResumeDetails, updateResumeDescriptionAsync, deleteResumeAsync } from '../redux/resumeSlice';
+import { loadResumeDetails, deleteResumeAsync } from '../redux/resumeSlice';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { Card, Button, Container, Form, Col, Row } from 'react-bootstrap';
+import { Card, Button, Container, Col, Row } from 'react-bootstrap';
 import { Worker, Viewer, SpecialZoomLevel } from '@react-pdf-viewer/core';
 import ImageViewer from '../components/ImageViewer';
 import '@react-pdf-viewer/core/lib/styles/index.css';
@@ -11,59 +11,31 @@ import CommentForm from '../forms/CommentForm';
 import CommentList from '../forms/CommentList';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faDownload, faTrash } from '@fortawesome/free-solid-svg-icons';
+import ResumeDetailsForm from '../forms/ResumeDetailsForm';
 
 const ResumeDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const [isEditing, setIsEditing] = useState(false);
-  const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
-  const [newDescription, setNewDescription] = useState<string>('');
-  const [pageCount, setPageCount] = useState(0);
+  const [notification, setNotification] = useState<{
+    message: string;
+    type: 'success' | 'error';
+  } | null>(null);
 
   const resume = useSelector((state: RootState) => state.resumes.selected);
   const currentUser = useSelector((state: RootState) => state.user.user);
-
   const isOwner = currentUser?.id === resume?.posterId._id;
 
   useEffect(() => {
     if (id) dispatch(loadResumeDetails(id));
   }, [id, dispatch]);
 
-  useEffect(() => {
-    if (resume) setNewDescription(resume.description || '');
-  }, [resume]);
-
-  const handleDescriptionUpdate = async () => {
-    if (!id || newDescription.trim() === resume?.description) {
-      setIsEditing(false);
-      return;
-    }
-
-    try {
-      const actionResult = await dispatch(
-        updateResumeDescriptionAsync({ id, description: newDescription.trim() })
-      );
-
-      if (updateResumeDescriptionAsync.fulfilled.match(actionResult)) {
-        setNotification({ message: 'Resume description updated successfully.', type: 'success' });
-        window.location.reload();
-      } else {
-        setNotification({ message: 'Failed to update description.', type: 'error' });
-      }
-    } catch (error) {
-      setNotification({ message: 'An unexpected error occurred.', type: 'error' });
-    } finally {
-      setIsEditing(false);
-    }
-  };
-
   const handleResumeDelete = () => {
     if (id) {
       const userConfirmed = window.confirm(
-        "Are you sure you want to delete this resume? This action cannot be undone."
+        'Are you sure you want to delete this resume? This action cannot be undone.'
       );
-  
+
       if (userConfirmed) {
         dispatch(deleteResumeAsync(id)).then(() => {
           navigate('/resumes');
@@ -71,11 +43,10 @@ const ResumeDetails: React.FC = () => {
       }
     }
   };
-  
 
   const handleDownloadResume = () => {
     if (!resume?.url) {
-      console.error("Resume URL is undefined.");
+      console.error('Resume URL is undefined.');
       return;
     }
 
@@ -114,25 +85,11 @@ const ResumeDetails: React.FC = () => {
               <Card.Title>{resume.description}</Card.Title>
 
               {isOwner && (
-                <Form className="mt-3">
-                  <Form.Group>
-                    <Form.Label>Update Description</Form.Label>
-                    <Form.Control
-                      type="text"
-                      value={newDescription}
-                      onChange={(e) => setNewDescription(e.target.value)}
-                      disabled={isEditing}
-                    />
-                  </Form.Group>
-                  <Button
-                    className="mt-2"
-                    variant="warning"
-                    onClick={handleDescriptionUpdate}
-                    disabled={newDescription === resume.description || isEditing}
-                  >
-                    Update
-                  </Button>
-                </Form>
+                <ResumeDetailsForm
+                  resumeId={id!}
+                  initialDescription={resume.description}
+                  onSuccess={() => window.location.reload()}
+                />
               )}
 
               <div className="mt-3">
@@ -144,7 +101,6 @@ const ResumeDetails: React.FC = () => {
                       <Viewer
                         fileUrl={resume.url}
                         defaultScale={SpecialZoomLevel.PageWidth}
-                        onDocumentLoad={(e) => setPageCount(e.doc.numPages)}
                       />
                     </Worker>
                   </div>
@@ -165,9 +121,7 @@ const ResumeDetails: React.FC = () => {
         <Col md={4} className="order-2 order-md-1 border-end">
           <h5 className="mb-3">Comments</h5>
           {id && <CommentForm resumeId={id} />}
-          <div className="mt-4">
-            {id && <CommentList resumeId={id} />}
-          </div>
+          <div className="mt-4">{id && <CommentList resumeId={id} />}</div>
         </Col>
       </Row>
     </Container>
