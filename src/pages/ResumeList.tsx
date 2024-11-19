@@ -65,24 +65,20 @@ const ResumeList = () => {
       ) : (
         resumes.map((resume) => (
           <style.Card key={resume._id.toString()} className="mb-3" >
-            <style.Card.Body style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-              <div>
+            <style.Card.Header className="d-flex justify-content-between">
                 <Link to={`/resumes/${resume._id}`}>
                   <style.Button variant="primary" style={{ marginBottom: '8px' }}>
                     <FontAwesomeIcon icon={faEye} />
                   </style.Button>
                 </Link>
-              </div>
-              <div style={{ flex: 1, textAlign: 'center' }}>
-                <style.Card.Text>{resume.description}</style.Card.Text>
-              </div>
-              <div>
+
                 <style.Button variant="secondary" style={{ marginBottom: '8px'}} as="a" href={resume.url} target='_blank' download> 
                   <FontAwesomeIcon icon={faDownload} />
                 </style.Button>
-              </div>
-            </style.Card.Body>
+            </style.Card.Header>
             <style.Card.Body>
+              <style.Card.Title>{resume.description}</style.Card.Title>
+              
               {resume.format === 'pdf' ? (
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
                   <Viewer fileUrl={resume.url} defaultScale={SpecialZoomLevel.PageWidth} pageLayout={pageLayout} />
