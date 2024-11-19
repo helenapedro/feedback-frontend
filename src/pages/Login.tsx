@@ -5,6 +5,7 @@ import { registerUser } from '../api/authApi';
 import { login } from '../redux/userSlice';
 import LoginForm from '../forms/loginForm';
 import { RootState, AppDispatch } from '../redux/store';
+import { Spinner } from 'react-bootstrap';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -48,7 +49,7 @@ const Login = () => {
   return (
     <div>
       {error && <div className="alert alert-danger">{error}</div>}
-      {loading && <div className="alert alert-info">Loading...</div>}
+      {loading && <Spinner animation="border" />}
       <LoginForm
         handleLogin={handleLogin}
         handleRegister={handleRegister}
