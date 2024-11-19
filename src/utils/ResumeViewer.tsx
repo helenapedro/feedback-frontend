@@ -1,16 +1,18 @@
-// ResumeViewer.tsx
 import React from 'react';
-import { Worker, Viewer, SpecialZoomLevel } from '@react-pdf-viewer/core';
 import ImageViewer from './ImageViewer';
+import { Worker, Viewer, SpecialZoomLevel, PageLayout } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 
 interface ResumeViewerProps {
     url: string;
     format: string;
+    pageLayout?: PageLayout; 
+    workerUrl?: string; 
+    styles?: React.CSSProperties;
     onDocumentLoad?: (pageCount: number) => void;
 }
 
-const ResumeViewer: React.FC<ResumeViewerProps> = ({ url, format, onDocumentLoad }) => {
+const ResumeViewer: React.FC<ResumeViewerProps> = ({ url, format, pageLayout, workerUrl, styles, onDocumentLoad }) => {
     const isImage = ['jpg', 'jpeg', 'png'].includes(format);
 
     if (isImage) {
@@ -19,10 +21,11 @@ const ResumeViewer: React.FC<ResumeViewerProps> = ({ url, format, onDocumentLoad
 
     return (
         <div style={{ border: '1px solid #e3e6f0', padding: '15px', backgroundColor: '#ffffff' }}>
-            <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
+            <Worker workerUrl={workerUrl || "https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js"}>
                 <Viewer
                     fileUrl={url}
                     defaultScale={SpecialZoomLevel.PageWidth}
+                    pageLayout={pageLayout}
                     onDocumentLoad={(e) => onDocumentLoad?.(e.doc.numPages)}
                 />
             </Worker>

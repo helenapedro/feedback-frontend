@@ -23,6 +23,8 @@ const ResumeDetails: React.FC = () => {
   const currentUser = useSelector((state: RootState) => state.user.user);
   const isOwner = currentUser?.id === resume?.posterId._id;
 
+  console.log('posterId: ', resume?.posterId._id);
+
   const { deleteResume } = useResumeActions(id);
   const { downloadFile } = useFileDownloader();
   

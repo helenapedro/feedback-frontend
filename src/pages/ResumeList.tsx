@@ -4,10 +4,11 @@ import { RootState, AppDispatch } from '../redux/store';
 import { fetchResumesAsync } from '../redux/resumeSlice';
 import { Link } from 'react-router-dom';
 import * as style from 'react-bootstrap/';
-import { Worker, Viewer, PageLayout, Rect, SpecialZoomLevel } from '@react-pdf-viewer/core';
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import { PageLayout, Rect } from '@react-pdf-viewer/core';
+import ResumeViewer from '../utils/ResumeViewer';
 import Pagination from '../utils/Pagination';
 import SearchForm from '../forms/SearchForm';
-import '@react-pdf-viewer/core/lib/styles/index.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDownload, faEye, faFileUpload } from '@fortawesome/free-solid-svg-icons';
 
@@ -72,7 +73,12 @@ const ResumeList = () => {
                   </style.Button>
                 </Link>
 
-                <style.Button variant="secondary" style={{ marginBottom: '8px'}} as="a" href={resume.url} target='_blank' download> 
+                <style.Button 
+                  variant="secondary" 
+                  style={{ marginBottom: '8px'}} 
+                  as="a" 
+                  href={resume.url} 
+                  target='_blank' download> 
                   <FontAwesomeIcon icon={faDownload} />
                 </style.Button>
             </style.Card.Header>
@@ -80,9 +86,12 @@ const ResumeList = () => {
               <style.Card.Title>{resume.description}</style.Card.Title>
               
               {resume.format === 'pdf' ? (
-                <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
-                  <Viewer fileUrl={resume.url} defaultScale={SpecialZoomLevel.PageWidth} pageLayout={pageLayout} />
-                </Worker>
+                <ResumeViewer
+                  url={resume.url} 
+                  format={resume.format}
+                  pageLayout={pageLayout} 
+                 
+                />
               ) : (
                 <img src={resume.url} alt="Resume Preview" style={{ maxWidth: '100%', backgroundColor: '#007acc' }} />
               )}

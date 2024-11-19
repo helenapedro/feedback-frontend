@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { selectUserInfo } from '../redux/userSlice';
 import { User } from '../types';

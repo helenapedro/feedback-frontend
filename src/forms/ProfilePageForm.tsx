@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../redux/store';
 import { changeUserPassword, deactivateUserAccount, updateUserAsync } from '../redux/userSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faSave, faTrash, faKey, faEnvelope, faUser } from '@fortawesome/free-solid-svg-icons';
+import * as icons from '@fortawesome/free-solid-svg-icons';
 import { Form, Button, Col } from 'react-bootstrap';
 
 
@@ -70,8 +70,8 @@ const ProfilePageForm: React.FC<ProfilePageFormProps> = ({
           setSuccess('');
           try {
                await dispatch(changeUserPassword({
-               oldPassword: formData.password,
-               newPassword: formData.newPassword
+                    oldPassword: formData.password,
+                    newPassword: formData.newPassword
                })).unwrap();
                
                setSuccess('Password changed successfully.');
@@ -101,7 +101,7 @@ const ProfilePageForm: React.FC<ProfilePageFormProps> = ({
           <Form>
                <Form.Group controlId="formUsername">
                     <Form.Label>
-                         <FontAwesomeIcon icon={faUser} className="me-2" /> Username
+                         <FontAwesomeIcon icon={icons.faUser} className="me-2" /> Username
                     </Form.Label>
                     <Form.Control
                          type="text"
@@ -113,7 +113,7 @@ const ProfilePageForm: React.FC<ProfilePageFormProps> = ({
                </Form.Group>
                <Form.Group controlId="formEmail" className="mt-3">
                     <Form.Label>
-                         <FontAwesomeIcon icon={faEnvelope} className="me-2" />
+                         <FontAwesomeIcon icon={icons.faEnvelope} className="me-2" />
                          Email
                     </Form.Label>
                     <Form.Control
@@ -131,7 +131,7 @@ const ProfilePageForm: React.FC<ProfilePageFormProps> = ({
                               variant="link" 
                               onClick={() => setShowChangePassword(!showChangePassword)} 
                               className="mt-3">
-                              <FontAwesomeIcon icon={faKey} /> {showChangePassword ? 'Cancel' : 'Change Password'}
+                              <FontAwesomeIcon icon={icons.faKey} /> {showChangePassword ? 'Cancel' : 'Change Password'}
                          </Button> {showChangePassword && (
                          <Col className="password-change-section mt-3">
                               <Form.Group controlId="formCurrentPassword">
@@ -165,7 +165,7 @@ const ProfilePageForm: React.FC<ProfilePageFormProps> = ({
                     {isEditing ? (
                          <>
                               <Button onClick={handleSaveChanges} variant="success" style={{ marginRight: '8px' }}>
-                                   <FontAwesomeIcon icon={faSave} /> Save
+                                   <FontAwesomeIcon icon={icons.faSave} /> Save
                               </Button>
                               <Button variant="secondary" onClick={handleToggleEdit} style={{ marginRight: '8px' }}>
                                    Cancel
@@ -173,11 +173,11 @@ const ProfilePageForm: React.FC<ProfilePageFormProps> = ({
                          </>
                          ) : (
                               <Button onClick={handleToggleEdit} variant="primary">
-                                   <FontAwesomeIcon icon={faEdit} /> Edit
+                                   <FontAwesomeIcon icon={icons.faEdit} /> Edit
                               </Button>
                     )}
                     <Button onClick={handleDeleteAccount} variant="danger">
-                         <FontAwesomeIcon icon={faTrash} /> Delete
+                         <FontAwesomeIcon icon={icons.faTrash} /> Delete
                     </Button>
                </Col>
           </Form>
