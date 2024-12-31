@@ -3,14 +3,14 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './redux/store';
 import App from './App';
-import { AwsRum, AwsRumConfig } from 'aws-rum-web';
+//import { AwsRum, AwsRumConfig } from 'aws-rum-web';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 
 // AWS RUM Initialization
-try {
+/* try {
   const config: AwsRumConfig = {
     sessionSampleRate: 1,
     identityPoolId: "us-east-2:013c6bc1-422d-4764-8a0c-86db7ec0b028",
@@ -36,7 +36,7 @@ try {
   console.error('AWS RUM initialization failed:', error);
   // Ignore errors thrown during CloudWatch RUM web client initialization
 }
-
+ */
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
