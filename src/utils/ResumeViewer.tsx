@@ -21,7 +21,7 @@ const ResumeViewer: React.FC<ResumeViewerProps> = ({ url, format, pageLayout, wo
 
     return (
         <div style={{ border: '1px solid #e3e6f0', padding: '15px', backgroundColor: '#ffffff' }}>
-            <Worker workerUrl={workerUrl || "https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js"}>
+            <Worker workerUrl={workerUrl || "https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js"}>
                 <Viewer
                     fileUrl={url}
                     defaultScale={SpecialZoomLevel.PageWidth}
