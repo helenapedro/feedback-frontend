@@ -1,4 +1,3 @@
-// App.tsx
 import React, { useEffect } from 'react';
 import { AppDispatch, RootState } from './redux/store';
 import { useDispatch, useSelector } from 'react-redux';
