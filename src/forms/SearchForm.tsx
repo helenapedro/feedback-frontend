@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import * as style from 'react-bootstrap/';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 interface SearchFormProps {
   onSearch: (format: string, createdAt: string) => void;
