@@ -7,7 +7,7 @@ import Notification from '../utils/Notification';
 import useFileDownloader from '../middleware/useFileDownloader';
 import useResumeActions from '../middleware/useResumeActions';
 import * as styles from 'react-bootstrap';
-import ResumeViewerSection from '../utils/ResumeViewerSection';
+import ViewerSection from '../components/resumedetails/ViewerSection';
 import CommentsSection from '../utils/CommentsSection';
 
 const ResumeDetails: React.FC = () => {
@@ -44,7 +44,7 @@ const ResumeDetails: React.FC = () => {
       <styles.Row>
         {/* Right Section: Resume Viewer */}
         <styles.Col md={8} className="order-1 order-md-2">
-          <ResumeViewerSection
+          <ViewerSection
               id={id}
               resume={resume}
               isOwner={isOwner}

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import ResumeViewer from './ResumeViewer';
-import ResumeDetailsForm from '../forms/ResumeDetailsForm';
+import ResumeViewer from './Viewer';
+import ResumeDetailsForm from '../../forms/ResumeDetailsForm';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as icons from '@fortawesome/free-solid-svg-icons';
 import * as styles from 'react-bootstrap';
 
-interface ResumeViewerSectionProps {
+interface ViewerSectionProps {
   id: string | undefined;
   resume: {
     url: string;
@@ -18,7 +18,7 @@ interface ResumeViewerSectionProps {
   deleteResume: () => void;
 }
 
-const ResumeViewerSection: React.FC<ResumeViewerSectionProps> = ({
+const ViewerSection: React.FC<ViewerSectionProps> = ({
   id,
   resume,
   isOwner,
@@ -82,4 +82,4 @@ const ResumeViewerSection: React.FC<ResumeViewerSectionProps> = ({
   );
 };
 
-export default ResumeViewerSection;
+export default ViewerSection;
