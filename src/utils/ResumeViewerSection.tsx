@@ -47,7 +47,6 @@ const ResumeViewerSection: React.FC<ResumeViewerSectionProps> = ({
       </styles.Card.Header>
       <styles.Card.Body>
         <styles.Card.Title>{resume.description}</styles.Card.Title>
-
         {isOwner ? (
           <ResumeDetailsForm
             resumeId={id || ''}
@@ -63,9 +62,6 @@ const ResumeViewerSection: React.FC<ResumeViewerSectionProps> = ({
           format={resume.format}
           onDocumentLoad={(pageCount) => setPageCount(pageCount)}
         />
-        {pageCount > 0 && (
-          <p className="text-muted">{`This resume has ${pageCount} page(s).`}</p>
-        )}
       </styles.Card.Body>
       {isOwner && (
         <styles.Card.Footer>
