@@ -12,7 +12,7 @@ interface ResumeDetailsFormProps {
 
 const ResumeDetailsForm: React.FC<ResumeDetailsFormProps> = ({
   resumeId,
-  initialDescription,
+  initialDescription = '',
   onSuccess,
 }) => {
   const { id } = useParams<{ id: string }>();
@@ -45,7 +45,7 @@ const ResumeDetailsForm: React.FC<ResumeDetailsFormProps> = ({
   return (
     <Form className="mt-3">
       <Form.Group>
-        <Form.Label>Update Description</Form.Label>
+        <Form.Label>Description</Form.Label>
         <Form.Control
           type="text"
           value={newDescription}
@@ -59,7 +59,7 @@ const ResumeDetailsForm: React.FC<ResumeDetailsFormProps> = ({
         onClick={handleDescriptionUpdate}
         disabled={newDescription.trim() === initialDescription || isEditing}
       >
-        Update
+        Update Description
       </Button>
     </Form>
   );
