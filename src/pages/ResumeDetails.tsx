@@ -21,9 +21,9 @@ const ResumeDetails: React.FC = () => {
   
   const resume = useSelector((state: RootState) => state.resumes.selected);
   const currentUser = useSelector((state: RootState) => state.user.user);
-  const isOwner = currentUser?.id === resume?.posterId._id;
+  const isOwner = currentUser?.id === resume?.posterId?._id;
 
-  console.log('posterId: ', resume?.posterId._id);
+  console.log('posterId: ', resume?.posterId?._id); 
 
   const { deleteResume } = useResumeActions(id);
   const { downloadFile } = useFileDownloader();
@@ -33,8 +33,10 @@ const ResumeDetails: React.FC = () => {
   }, [id, dispatch]);
   
   const handleDownloadResume = () => {
-    if (resume?.url) {
-        downloadFile(resume.url, `${resume.description}.${resume.format}`);
+    if (resume?.url && resume?.description && resume?.format) {
+      downloadFile(resume.url, `${resume.description}.${resume.format}`);
+    } else {
+      console.error('Resume URL, description, or format is missing.');
     }
   };
 
@@ -45,16 +47,16 @@ const ResumeDetails: React.FC = () => {
         {/* Right Section: Resume Viewer */}
         <styles.Col md={8} className="order-1 order-md-2">
           <ViewerSection
-              id={id}
-              resume={resume}
-              isOwner={isOwner}
-              handleDownloadResume={handleDownloadResume}
-              deleteResume={deleteResume}
+            id={id}
+            resume={resume}
+            isOwner={isOwner}
+            handleDownloadResume={handleDownloadResume}
+            deleteResume={deleteResume}
           />
         </styles.Col>
         {/* Left Section: Comments */}
         <styles.Col md={4} className="order-2 order-md-1 border-end">
-          <CommentsSection id={id} />
+          <CommentsSection id={id || ''} />
         </styles.Col>
       </styles.Row>
     </styles.Container>
