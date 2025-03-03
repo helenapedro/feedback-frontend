@@ -35,28 +35,6 @@ const ResumeDetailsForm: React.FC<ResumeDetailsFormProps> = ({
     }
   }, [dispatch, resumeId]);
 
-  const handleDescriptionUpdate = async () => {
-    if (newDescription.trim() === initialDescription) {
-      setIsEditing(false);
-      return;
-    }
-
-    try {
-      const actionResult = await updateDescription(newDescription.trim());
-
-      if (updateResumeDescriptionAsync.fulfilled.match(actionResult)) {
-        alert('Resume description updated successfully.');
-        onSuccess();
-      } else {
-        alert('Failed to update description.');
-      }
-    } catch (error) {
-      alert('An unexpected error occurred.');
-    } finally {
-      setIsEditing(false);
-    }
-  };
-
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setSelectedFile(e.target.files[0]);
@@ -103,17 +81,6 @@ const ResumeDetailsForm: React.FC<ResumeDetailsFormProps> = ({
             <Row>
               <Col md={6}>
                 <Form.Group>
-                  <Form.Label>Description</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={newDescription}
-                    onChange={(e) => setNewDescription(e.target.value)}
-                    disabled={isEditing}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group>
                   <Form.Label>Version</Form.Label>
                   <Form.Control
                     as="select"
@@ -124,7 +91,7 @@ const ResumeDetailsForm: React.FC<ResumeDetailsFormProps> = ({
                     <option value="">Select a version</option>
                     {resumeVersions.map((version) => (
                       <option key={version.versionId} value={version.versionId}>
-                        {`Version ${version.versionId} - ${new Date(version.lastModified).toLocaleDateString()}`}
+                        {`${version.name}`}
                       </option>
                     ))}
                   </Form.Control>
@@ -144,16 +111,6 @@ const ResumeDetailsForm: React.FC<ResumeDetailsFormProps> = ({
               </Col>
             </Row>
             <Row className="mt-3">
-              <Col md={6}>
-                <Button
-                  variant="warning"
-                  onClick={handleDescriptionUpdate}
-                  disabled={newDescription.trim() === initialDescription || isEditing}
-                  className='btn-block'
-                >
-                  Update Description
-                </Button>
-              </Col>
               <Col md={6}>
                 <Button
                   variant="primary"

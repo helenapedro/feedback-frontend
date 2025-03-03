@@ -64,8 +64,14 @@ const ResumeDetails: React.FC = () => {
                 <FontAwesomeIcon icon={icons.faDownload} />
               </styles.Button>
             </styles.Card.Header>
-            <OwnerDetailForm resumeId={id || ''} resume={resume} />
-            
+            <OwnerDetailForm 
+              resumeId={id || ''} 
+              resume={resume} 
+              initialDescription={resume?.description || ''} 
+              onSuccess={() => console.log('Success')} 
+              isOwner={isOwner}
+            />
+
           </styles.Card>
         </styles.Col>
       </styles.Row>
