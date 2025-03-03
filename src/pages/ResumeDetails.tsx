@@ -6,9 +6,13 @@ import { useParams } from 'react-router-dom';
 import Notification from '../utils/Notification';
 import useFileDownloader from '../middleware/useFileDownloader';
 import useResumeActions from '../middleware/useResumeActions';
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as icons from '@fortawesome/free-solid-svg-icons';
 import * as styles from 'react-bootstrap';
 import ViewerSection from '../components/resumedetails/ViewerSection';
 import CommentsSection from '../utils/CommentsSection';
+import OwnerDetailForm from '../forms/OwnerDetailForm';
 
 const ResumeDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -43,7 +47,30 @@ const ResumeDetails: React.FC = () => {
   return (
     <styles.Container className="mt-4" style={{ maxWidth: '1200px' }}>
       {notification && <Notification message={notification.message} type={notification.type} />}
-      <styles.Row>
+      <styles.Row className="mb-4">
+        <styles.Col>
+          <styles.Card>
+            <styles.Card.Header className="d-flex justify-content-between align-items-center">
+              <Link to="/resumes">
+                <styles.Button variant="secondary" aria-label="Back to Resumes">
+                  <FontAwesomeIcon icon={icons.faArrowLeft} />
+                </styles.Button>
+              </Link>
+              <styles.Button
+                variant="secondary"
+                onClick={handleDownloadResume}
+                aria-label="Download Resume"
+              >
+                <FontAwesomeIcon icon={icons.faDownload} />
+              </styles.Button>
+            </styles.Card.Header>
+            <OwnerDetailForm resumeId={id || ''} resume={resume} />
+            
+          </styles.Card>
+        </styles.Col>
+      </styles.Row>
+      
+      <styles.Row className="mb-4">
         {/* Right Section: Resume Viewer */}
         <styles.Col md={8} className="order-1 order-md-2">
           <ViewerSection
@@ -56,7 +83,15 @@ const ResumeDetails: React.FC = () => {
         </styles.Col>
         {/* Left Section: Comments */}
         <styles.Col md={4} className="order-2 order-md-1 border-end">
-          <CommentsSection id={id || ''} />
+          <styles.Card>
+            <styles.Card.Header className="d-flex align-items-center">
+              <FontAwesomeIcon icon={icons.faComments} className="me-2" />
+              Feedback
+            </styles.Card.Header>
+            <styles.Card.Body>
+              <CommentsSection id={id || ''} />
+            </styles.Card.Body>
+          </styles.Card>
         </styles.Col>
       </styles.Row>
     </styles.Container>

@@ -22,6 +22,20 @@ export const uploadResume = async (file: File, format: string, description?: str
   return response.data;
 };
 
+export const updateResume = async (id: string, file: File, format: string, description?: string) => {
+  const formData = new FormData();
+  formData.append('resume', file);
+  formData.append('format', format);
+  if (description) formData.append('description', description);
+
+  const response = await axios.put(`${API_URL}/api/resumes/${id}`, formData, {
+    headers: {
+      ...getAuthHeaders(),
+    },
+  });
+  return response.data;
+}
+
 export const updateResumeDescription = async (id: string, description: string) => {
   const response = await axios.put(
     `${API_URL}/api/resumes/${id}/update-description`,

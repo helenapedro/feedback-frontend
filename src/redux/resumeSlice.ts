@@ -35,6 +35,14 @@ export const fetchResumesAsync = createAsyncThunk<IResumesResponse, { page?: num
   }
 );
 
+export const updateResumeAsync = createAsyncThunk<IResume, { id: string; file: File; format: string; description?: string }>(
+  'resumes/updateResume',
+  async ({ id, file, format, description }) => {
+    const response = await api.updateResume(id, file, format, description);
+    return response;
+  }
+);
+
 export const updateResumeDescriptionAsync = createAsyncThunk<IResume, { id: string; description: string; }>(
   'resumes/updateResumeDescription',
   async ({ id, description}) => {
@@ -119,6 +127,23 @@ const resumeSlice = createSlice({
       .addCase(loadResumeDetails.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Error fetching resume details';
+      })
+      .addCase(updateResumeAsync.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateResumeAsync.fulfilled, (state, action) => {
+        state.loading = false;
+        if (state.data) {
+          const index = state.data.resumes.findIndex((resume) => resume._id === action.payload._id);
+          if (index !== -1) {
+            state.data.resumes[index] = action.payload;
+          }
+        }
+      })
+      .addCase(updateResumeAsync.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Error updating resume';
       })
       .addCase(updateResumeDescriptionAsync.pending, (state) => {
         state.loading = true;

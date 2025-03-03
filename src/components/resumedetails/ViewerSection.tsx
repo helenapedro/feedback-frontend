@@ -1,18 +1,14 @@
 import React, { useState } from 'react';
 import ResumeViewer from './Viewer';
 import ResumeDetailsForm from '../../forms/ResumeDetailsForm';
-import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as icons from '@fortawesome/free-solid-svg-icons';
 import * as styles from 'react-bootstrap';
+import { IResume } from '../../types';
 
 interface ViewerSectionProps {
   id: string | undefined;
-  resume: {
-    url: string;
-    description: string;
-    format: string;
-  } | null;
+  resume: IResume | null;
   isOwner: boolean;
   handleDownloadResume: () => void;
   deleteResume: () => void;
@@ -22,7 +18,6 @@ const ViewerSection: React.FC<ViewerSectionProps> = ({
   id,
   resume,
   isOwner,
-  handleDownloadResume,
   deleteResume,
 }) => {
   const [pageCount, setPageCount] = useState<number>(0);
@@ -31,26 +26,12 @@ const ViewerSection: React.FC<ViewerSectionProps> = ({
 
   return (
     <styles.Card className="shadow-sm">
-      <styles.Card.Header className="d-flex justify-content-between align-items-center">
-        <Link to="/resumes">
-          <styles.Button variant="secondary" aria-label="Back to Resumes">
-            <FontAwesomeIcon icon={icons.faArrowLeft} />
-          </styles.Button>
-        </Link>
-        <styles.Button
-          variant="secondary"
-          onClick={handleDownloadResume}
-          aria-label="Download Resume"
-        >
-          <FontAwesomeIcon icon={icons.faDownload} />
-        </styles.Button>
-      </styles.Card.Header>
       <styles.Card.Body>
-        <styles.Card.Title>{resume.description}</styles.Card.Title>
-
         {isOwner ? (
           <ResumeDetailsForm
             resumeId={id || ''}
+            uploadedBy={resume.posterId.username}
+            uploadedAt={resume.createdAt.toString()}
             initialDescription={resume.description}
             onSuccess={() => console.log('Details updated!')}
           />

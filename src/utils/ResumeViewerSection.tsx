@@ -5,14 +5,11 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as icons from '@fortawesome/free-solid-svg-icons';
 import * as styles from 'react-bootstrap';
+import { IResume } from '../types';
 
 interface ResumeViewerSectionProps {
   id: string | undefined;
-  resume: {
-    url: string;
-    description: string;
-    format: string;
-  } | null;
+  resume: IResume | null;
   isOwner: boolean;
   handleDownloadResume: () => void;
   deleteResume: () => void;
@@ -52,6 +49,8 @@ const ResumeViewerSection: React.FC<ResumeViewerSectionProps> = ({
             resumeId={id || ''}
             initialDescription={resume.description}
             onSuccess={() => console.log('Details updated!')}
+            uploadedBy={resume.posterId.username}
+            uploadedAt={resume.createdAt.toString()}
           />
         ) : (
           <p>You don't have permission to edit this resume.</p>
