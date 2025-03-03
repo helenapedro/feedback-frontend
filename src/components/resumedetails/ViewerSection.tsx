@@ -27,6 +27,16 @@ const ViewerSection: React.FC<ViewerSectionProps> = ({
   return (
     <styles.Card className="shadow-sm">
       <styles.Card.Body>
+        {pageCount > 0 && (
+            <p className="text-muted">{`This resume has ${pageCount} page(s).`}</p>
+        )}
+
+        <ResumeViewer
+          url={resume.url}
+          format={resume.format}
+          onDocumentLoad={(pageCount) => setPageCount(pageCount)}
+        />
+        
         {isOwner ? (
           <ResumeDetailsForm
             resumeId={id || ''}
@@ -39,15 +49,6 @@ const ViewerSection: React.FC<ViewerSectionProps> = ({
           <p>You don't have permission to edit this resume.</p>
         )}
 
-          {pageCount > 0 && (
-               <p className="text-muted">{`This resume has ${pageCount} page(s).`}</p>
-          )}
-
-        <ResumeViewer
-          url={resume.url}
-          format={resume.format}
-          onDocumentLoad={(pageCount) => setPageCount(pageCount)}
-        />
       </styles.Card.Body>
       {isOwner && (
         <styles.Card.Footer>

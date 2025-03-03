@@ -80,18 +80,6 @@ const OwnerDetailForm: React.FC<OwnerDetailFormProps> = ({
             <Card>
               <Card.Body>
                 <Card.Title>Description</Card.Title>
-                <Card.Text>
-                  {resume?.description || 'No description available.'}
-                </Card.Text>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-
-        <Row className="mt-3">
-          <Col>
-            <Card>
-              <Card.Body>
                 {isOwner ? (
                   <Form.Control
                     as="textarea"
@@ -104,6 +92,7 @@ const OwnerDetailForm: React.FC<OwnerDetailFormProps> = ({
                   <Card.Text>
                     {resume?.description || 'No description available.'}
                   </Card.Text>
+                  
                 )}
               </Card.Body>
             </Card>
