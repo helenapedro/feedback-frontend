@@ -29,3 +29,7 @@ export const fetchSingleUser = async (userId: string) => {
 export const deactivateUser = async (userId: string) => {
   return api.delete(`/api/admin/user/${userId}/deactivate`);
 };
+
+export const activateUser = async (userId: string) => {
+  return api.put(`/api/admin/user/${userId}/activate`);
+};

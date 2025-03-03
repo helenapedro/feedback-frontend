@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ResumeVersion } from '../types';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -46,10 +47,27 @@ export const fetchResumeDetails = async (id: string) => {
   return response.data;
 };
 
+
+export async function fetchResumeVersions(resumeId: string): Promise<ResumeVersion[]> {
+  try {
+    const response = await axios.get(`${API_URL}/api/resumes/${resumeId}/versions`, {
+      headers: { ...getAuthHeaders() },
+    });
+
+    if (!response) {
+      throw new Error("Failed to fetch resume versions");
+    }
+  
+    return response.data.versions;
+  } catch (error) {
+    console.error("Error fetching user resumes:", error);
+    throw error;
+  }
+}
+
 export const deleteResume = async (id: string) => {
   const response = await axios.delete(`${API_URL}/api/resumes/${id}`, {
     headers: { ...getAuthHeaders() },
   });
   return response.data;
 };
-

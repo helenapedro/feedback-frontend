@@ -1,10 +1,11 @@
 import * as api from '../services/api'; 
-import { IResume, IResumesResponse } from '../types'; 
+import { IResume, IResumesResponse, ResumeVersion } from '../types'; 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 
 interface ResumeState {
   data: IResumesResponse | null;
   selected: IResume | null; 
+  versions: ResumeVersion[] | null;
   loading: boolean;
   error: string | null;
 }
@@ -12,6 +13,7 @@ interface ResumeState {
 const initialState: ResumeState = {
   data: null,
   selected: null,
+  versions: null,
   loading: false,
   error: null,
 };
@@ -47,6 +49,22 @@ export const loadResumeDetails = createAsyncThunk<IResume, string>(
   async (id) => {
     const response = await api.fetchResumeDetails(id);
     return response;
+  }
+);
+
+export const fetchResumeVersionsAsync = createAsyncThunk<ResumeVersion[], string>(
+  'resumes/fetchResumeVersions',
+  async (resumeId, { rejectWithValue }) => {
+    try {
+      const response = await api.fetchResumeVersions(resumeId);
+      if (!response) {
+        throw new Error("Failed to fetch resume versions");
+      }
+      return response;
+    } catch (error) {
+      console.error("Error fetching resume versions:", error);
+      return rejectWithValue((error as Error).message);
+    }
   }
 );
 
@@ -122,6 +140,18 @@ const resumeSlice = createSlice({
       .addCase(deleteResumeAsync.pending, (state) => {
         state.loading = true;
         state.error = null;
+      })
+      .addCase(fetchResumeVersionsAsync.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchResumeVersionsAsync.fulfilled, (state, action: PayloadAction<ResumeVersion[]>) => {
+        state.versions = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchResumeVersionsAsync.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       })
       .addCase(deleteResumeAsync.fulfilled, (state, action) => {
         state.loading = false;

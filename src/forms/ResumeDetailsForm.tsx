@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
-import { updateResumeDescriptionAsync } from '../redux/resumeSlice';
+import { fetchResumeVersionsAsync, updateResumeDescriptionAsync } from '../redux/resumeSlice';
 import useResumeActions from '../middleware/useResumeActions';
+import { useAppDispatch, useAppSelector } from '../redux/store';
 
 interface ResumeDetailsFormProps {
   resumeId: string;
@@ -18,7 +19,16 @@ const ResumeDetailsForm: React.FC<ResumeDetailsFormProps> = ({
   const { id } = useParams<{ id: string }>();
   const [newDescription, setNewDescription] = useState(initialDescription);
   const [isEditing, setIsEditing] = useState(false);
+  const [selectedVersion, setSelectedVersion] = useState<string>('');
   const { updateDescription } = useResumeActions(id);
+  const dispatch = useAppDispatch();
+  const resumeVersions = useAppSelector((state) => state.resumes.versions) || [];
+
+  useEffect(() => {
+    if (resumeId) {
+      dispatch(fetchResumeVersionsAsync(resumeId));
+    }
+  }, [dispatch, resumeId]);
 
   const handleDescriptionUpdate = async () => {
     if (newDescription.trim() === initialDescription) {
@@ -52,6 +62,22 @@ const ResumeDetailsForm: React.FC<ResumeDetailsFormProps> = ({
           onChange={(e) => setNewDescription(e.target.value)}
           disabled={isEditing}
         />
+      </Form.Group>
+      <Form.Group>
+        <Form.Label>Version</Form.Label>
+        <Form.Control
+          as="select"
+          value={selectedVersion}
+          onChange={(e) => setSelectedVersion(e.target.value)}
+          disabled={isEditing}
+        >
+          <option value="">Select a version</option>
+          {resumeVersions.map((version) => (
+            <option key={version.versionId} value={version.versionId}>
+              {`${version.name}`}
+            </option>
+          ))}
+        </Form.Control>
       </Form.Group>
       <Button
         className="mt-2"

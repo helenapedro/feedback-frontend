@@ -5,7 +5,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as style from 'react-bootstrap/';
 import * as icon from '@fortawesome/free-solid-svg-icons';
 import { RootState } from '../redux/store';
-//import OffcanvasMenu from '../utils/OffcanvasMenu';
 
 function CustomNavbar() {
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);

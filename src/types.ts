@@ -28,6 +28,9 @@ export interface IResume {
   } 
   format: 'pdf' | 'docx' | 'jpg' | 'jpeg' | 'png'; 
   description: string;
+  aiFeedback: string;
+  comments?: Comment[];
+  versions?: ResumeVersion[];
   url: string;
   createdAt: Date; 
   updatedAt: Date; 
@@ -54,6 +57,10 @@ export interface Comment {
   user?: User;
 }
 
+export interface Description {
+  description: string;
+}
+
 export interface AddCommentPayload {
   resumeId: string;
   content: string;
@@ -62,4 +69,12 @@ export interface AddCommentPayload {
 export interface UpdateCommentPayload {
   commentId: string;
   content: string;
+}
+
+export interface ResumeVersion {
+  versionId: string;
+  lastModified: string;
+  size: number;
+  isLatest: boolean;
+  name: string;
 }
