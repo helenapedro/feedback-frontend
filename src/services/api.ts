@@ -47,7 +47,7 @@ export const updateResumeDescription = async (id: string, description: string) =
 
 
 export const fetchResumes = async (page: number = 1, limit: number = 10, format?: string, createdAt?: string) => {
-  const response = await axios.get(`${API_URL}/api/resumes`, {
+  const response = await axios.get(`${API_URL}/api/resumes/all`, {
     headers: { ...getAuthHeaders() },
     params: { page, limit, format, createdAt },
   });
@@ -56,6 +56,13 @@ export const fetchResumes = async (page: number = 1, limit: number = 10, format?
 
 export const fetchResumeDetails = async (id: string) => {
   const response = await axios.get(`${API_URL}/api/resumes/${id}`, {
+    headers: { ...getAuthHeaders() },
+  });
+  return response.data;
+};
+
+export const fetchUserResume = async (id: string) => {
+  const response = await axios.get(`${API_URL}/api/resumes`, {
     headers: { ...getAuthHeaders() },
   });
   return response.data;
