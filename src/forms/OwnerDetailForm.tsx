@@ -11,7 +11,7 @@ interface OwnerDetailFormProps {
   resumeId: string;
   resume: IResume | null;
   initialDescription: string;
-  onSuccess: () => void;
+  onSuccess: (message: string) => void;
   isOwner: boolean;
 }
 

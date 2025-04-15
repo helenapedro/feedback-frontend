@@ -1,32 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../redux/store';
-import { loadResumeDetails } from '../redux/resumeSlice';
-import { useParams, Link } from 'react-router-dom';
+import { loadCurrentUserResume } from '../redux/resumeSlice'; 
 import Notification from '../utils/Notification';
 import useFileDownloader from '../middleware/useFileDownloader';
+import useResumeActions from '../middleware/useResumeActions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as icons from '@fortawesome/free-solid-svg-icons';
 import * as styles from 'react-bootstrap';
-import ViewerSection from '../components/resumedetails/ViewerSection';
+import ViewerSection from '../components/resumedetails/ViewerSection'; 
 import CommentsSection from '../utils/CommentsSection';
+import OwnerDetailForm from '../forms/OwnerDetailForm';
 
-const ResumeDetails: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+const MyResume: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-
-  const [notification] = useState<{
+  const [notification, setNotification] = useState<{
     message: string;
     type: 'success' | 'error';
   } | null>(null);
 
-  const resume = useSelector((state: RootState) => state.resumes.selected);
+  const resume = useSelector((state: RootState) => state.resumes.currentUserResume); // New selector
+  const currentUser = useSelector((state: RootState) => state.user.user);
+  const isOwner = true; 
 
+  const { deleteResume } = useResumeActions(resume?._id);
   const { downloadFile } = useFileDownloader();
 
   useEffect(() => {
-    if (id) dispatch(loadResumeDetails(id));
-  }, [id, dispatch]);
+    dispatch(loadCurrentUserResume()); 
+  }, [dispatch]);
 
   const handleDownloadResume = () => {
     if (resume?.url && resume?.description && resume?.format) {
@@ -36,18 +38,21 @@ const ResumeDetails: React.FC = () => {
     }
   };
 
+  const handleResumeUpdateSuccess = (message: string) => {
+    setNotification({ message, type: 'success' });
+    setTimeout(() => setNotification(null), 3000);
+    dispatch(loadCurrentUserResume()); // Reload the resume data after update
+  };
+
   return (
     <styles.Container className="mt-4" style={{ maxWidth: '1200px' }}>
+      <h2>Manage Your Resume</h2>
       {notification && <Notification message={notification.message} type={notification.type} />}
       <styles.Row className="mb-4">
         <styles.Col>
           <styles.Card>
             <styles.Card.Header className="d-flex justify-content-between align-items-center">
-              <Link to="/resumes">
-                <styles.Button variant="secondary" aria-label="Back to Resumes">
-                  <FontAwesomeIcon icon={icons.faArrowLeft} />
-                </styles.Button>
-              </Link>
+              <span>Your Resume</span>
               {resume?.url && resume?.description && resume?.format && (
                 <styles.Button
                   variant="secondary"
@@ -58,47 +63,37 @@ const ResumeDetails: React.FC = () => {
                 </styles.Button>
               )}
             </styles.Card.Header>
-            <styles.Card.Body>
-              {resume && (
-                <>
-                  <p>
-                    <strong>Uploaded By:</strong> {resume?.posterId?.username || 'N/A'}
-                  </p>
-                  <p>
-                    <strong>Format:</strong> {resume.format}
-                  </p>
-                  {resume.description && (
-                    <p>
-                      <strong>Description:</strong> {resume.description}
-                    </p>
-                  )}
-                </>
-              )}
-            </styles.Card.Body>
+            <OwnerDetailForm
+              resumeId={resume?._id || ''}
+              resume={resume}
+              initialDescription={resume?.description || ''}
+              onSuccess={handleResumeUpdateSuccess} 
+              isOwner={isOwner}
+            />
           </styles.Card>
         </styles.Col>
       </styles.Row>
 
       <styles.Row className="mb-4">
-        {/* Right Section: Resume Viewer */}
-        <styles.Col md={8} className="order-1 order-md-2">
+        {/* Resume Viewer */}
+        <styles.Col md={8}>
           <ViewerSection
-            id={id}
+            id={resume?._id}
             resume={resume}
-            isOwner={false} // Explicitly set isOwner to false
+            isOwner={isOwner}
             handleDownloadResume={handleDownloadResume}
-            deleteResume={() => {}} // Remove delete functionality
+            deleteResume={deleteResume}
           />
         </styles.Col>
-        {/* Left Section: Comments */}
-        <styles.Col md={4} className="order-2 order-md-1 border-end">
+        {/* Feedback Section (Optional on this page) */}
+        <styles.Col md={4} className="border-end">
           <styles.Card>
             <styles.Card.Header className="d-flex align-items-center">
               <FontAwesomeIcon icon={icons.faComments} className="me-2" />
-              Feedback
+              Your Feedback
             </styles.Card.Header>
             <styles.Card.Body>
-              <CommentsSection id={id || ''} />
+              <CommentsSection id={resume?._id || ''} />
             </styles.Card.Body>
           </styles.Card>
         </styles.Col>
@@ -107,4 +102,4 @@ const ResumeDetails: React.FC = () => {
   );
 };
 
-export default ResumeDetails;
+export default MyResume;

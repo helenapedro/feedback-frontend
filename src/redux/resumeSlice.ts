@@ -1,10 +1,11 @@
-import * as api from '../services/api'; 
-import { IResume, IResumesResponse, ResumeVersion } from '../types'; 
+import * as api from '../services/api';
+import { IResume, IResumesResponse, ResumeVersion } from '../types';
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 
 interface ResumeState {
   data: IResumesResponse | null;
-  selected: IResume | null; 
+  selected: IResume | null;
+  currentUserResume: IResume | null; // New state for current user's resume
   versions: ResumeVersion[] | null;
   loading: boolean;
   error: string | null;
@@ -13,6 +14,7 @@ interface ResumeState {
 const initialState: ResumeState = {
   data: null,
   selected: null,
+  currentUserResume: null, // Initialize current user's resume
   versions: null,
   loading: false,
   error: null,
@@ -60,6 +62,15 @@ export const loadResumeDetails = createAsyncThunk<IResume, string>(
   }
 );
 
+// New Async Thunk to load the current user's resume
+export const loadCurrentUserResume = createAsyncThunk<IResume, void>(
+  'resumes/loadCurrentUserResume',
+  async () => {
+    const response = await api.fetchCurrentUserResume();
+    return response;
+  }
+);
+
 export const fetchResumeVersionsAsync = createAsyncThunk<ResumeVersion[], string>(
   'resumes/fetchResumeVersions',
   async (resumeId, { rejectWithValue }) => {
@@ -79,8 +90,8 @@ export const fetchResumeVersionsAsync = createAsyncThunk<ResumeVersion[], string
 export const deleteResumeAsync = createAsyncThunk<void, string>(
   'resumes/deleteResume',
   async (id) => {
-    await api.deleteResume(id); 
-    //return id; 
+    await api.deleteResume(id);
+    //return id;
   }
 );
 
@@ -128,6 +139,18 @@ const resumeSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || 'Error fetching resume details';
       })
+      .addCase(loadCurrentUserResume.pending, (state) => { // Handle loading state for current user's resume
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loadCurrentUserResume.fulfilled, (state, action: PayloadAction<IResume>) => { // Handle successful fetch
+        state.loading = false;
+        state.currentUserResume = action.payload;
+      })
+      .addCase(loadCurrentUserResume.rejected, (state, action) => { // Handle error state
+        state.loading = false;
+        state.error = action.error.message || 'Error fetching current user\'s resume';
+      })
       .addCase(updateResumeAsync.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -139,6 +162,12 @@ const resumeSlice = createSlice({
           if (index !== -1) {
             state.data.resumes[index] = action.payload;
           }
+        }
+        if (state.currentUserResume?._id === action.payload._id) {
+          state.currentUserResume = action.payload; // Update current user's resume if it was updated
+        }
+        if (state.selected?._id === action.payload._id) {
+          state.selected = action.payload; // Update selected resume if it was updated
         }
       })
       .addCase(updateResumeAsync.rejected, (state, action) => {
@@ -156,6 +185,12 @@ const resumeSlice = createSlice({
           if (index !== -1) {
             state.data.resumes[index] = action.payload;
           }
+        }
+        if (state.currentUserResume?._id === action.payload._id) {
+          state.currentUserResume = action.payload; // Update current user's resume if it was updated
+        }
+        if (state.selected?._id === action.payload._id) {
+          state.selected = action.payload; // Update selected resume if it was updated
         }
       })
       .addCase(updateResumeDescriptionAsync.rejected, (state, action) => {
@@ -182,6 +217,12 @@ const resumeSlice = createSlice({
         state.loading = false;
         if (state.data) {
           state.data.resumes = state.data.resumes.filter(resume => resume._id !== action.meta.arg);
+        }
+        if (state.currentUserResume?._id === action.meta.arg) {
+          state.currentUserResume = null; // Clear current user's resume if deleted
+        }
+        if (state.selected?._id === action.meta.arg) {
+          state.selected = null; // Clear selected resume if deleted
         }
       })
       .addCase(deleteResumeAsync.rejected, (state, action) => {

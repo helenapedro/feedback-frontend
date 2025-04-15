@@ -83,8 +83,6 @@ const ResumeList = () => {
                 </style.Button>
             </style.Card.Header>
             <style.Card.Body>
-              <style.Card.Title>{resume.description}</style.Card.Title>
-              
               {resume.format === 'pdf' ? (
                 <ResumeViewer
                   url={resume.url} 

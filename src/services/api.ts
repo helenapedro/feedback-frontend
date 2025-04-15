@@ -38,7 +38,7 @@ export const updateResume = async (id: string, file: File, format: string, descr
 
 export const updateResumeDescription = async (id: string, description: string) => {
   const response = await axios.put(
-    `${API_URL}/api/resumes/${id}/update-description`,
+    `${API_URL}/api/resumes/update-description`,
     { description },
     { headers: { ...getAuthHeaders() } }
   );
@@ -61,7 +61,7 @@ export const fetchResumeDetails = async (id: string) => {
   return response.data;
 };
 
-export const fetchUserResume = async (id: string) => {
+export const fetchCurrentUserResume = async () => {
   const response = await axios.get(`${API_URL}/api/resumes`, {
     headers: { ...getAuthHeaders() },
   });

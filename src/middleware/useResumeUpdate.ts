@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { useAppDispatch } from '../redux/store';
 import { updateResumeAsync, updateResumeDescriptionAsync } from '../redux/resumeSlice';
 
-const useResumeUpdate = (resumeId: string, initialDescription: string, onSuccess: () => void) => {
+const useResumeUpdate = (resumeId: string, initialDescription: string, onSuccess: (message: string) => void) => {
   const dispatch = useAppDispatch();
   const [newDescription, setNewDescription] = useState(initialDescription);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [updateSuccessMessage, setUpdateSuccessMessage] = useState<string | null>(null);
 
   const handleDescriptionUpdate = async () => {
     if (newDescription.trim() === initialDescription) {
@@ -18,13 +19,16 @@ const useResumeUpdate = (resumeId: string, initialDescription: string, onSuccess
       const actionResult = await dispatch(updateResumeDescriptionAsync({ id: resumeId, description: newDescription.trim() }));
 
       if (updateResumeDescriptionAsync.fulfilled.match(actionResult)) {
-        alert('Resume description updated successfully.');
-        onSuccess();
+        const successMessage = 'Resume description updated successfully.';
+        setUpdateSuccessMessage(successMessage);
+        onSuccess(successMessage); // Call onSuccess with the message
       } else {
         alert('Failed to update description.');
+        setUpdateSuccessMessage(null);
       }
     } catch (error) {
       alert('An unexpected error occurred.');
+      setUpdateSuccessMessage(null);
     } finally {
       setIsEditing(false);
     }
@@ -58,13 +62,16 @@ const useResumeUpdate = (resumeId: string, initialDescription: string, onSuccess
       }));
 
       if (updateResumeAsync.fulfilled.match(actionResult)) {
-        alert('Resume updated successfully.');
-        onSuccess();
+        const successMessage = 'Resume updated successfully.';
+        setUpdateSuccessMessage(successMessage);
+        onSuccess(successMessage); // Call onSuccess with the message
       } else {
         alert('Failed to update resume.');
+        setUpdateSuccessMessage(null);
       }
     } catch (error) {
       alert('An unexpected error occurred.');
+      setUpdateSuccessMessage(null);
     }
   };
 
@@ -77,6 +84,7 @@ const useResumeUpdate = (resumeId: string, initialDescription: string, onSuccess
     handleDescriptionUpdate,
     handleFileChange,
     handleResumeUpdate,
+    updateSuccessMessage, 
   };
 };
 

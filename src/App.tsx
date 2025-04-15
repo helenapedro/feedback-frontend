@@ -14,6 +14,7 @@ import { fetchUser, logout } from './redux/userSlice';
 import ProfilePage from './pages/ProfilePage';
 import About from './components/About';
 import Register from './pages/Register';
+import MyResume from './pages/MyResume';
 
 const App: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -54,6 +55,7 @@ const App: React.FC = () => {
         <Route path="/resumes" element={<ProtectedRoute element={<ResumesLayout />} />}>
           <Route index element={<ResumeList />} />
           <Route path=":id" element={<ResumeDetails />} />
+          <Route path="my-resume" element={<MyResume />} />
           <Route path="upload" element={<ResumeUploadForm />} />
         </Route>
 

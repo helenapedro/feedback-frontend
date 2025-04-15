@@ -22,7 +22,7 @@ function CustomNavbar() {
             <FontAwesomeIcon icon={icon.faBars} style={{ color: 'white' }} />
           </style.Navbar.Toggle>
           <style.Navbar.Collapse id="basic-navbar-nav">
-            <style.Nav className="me-auto">
+            <style.Nav className="ms-auto">
               {!isLoggedIn ? (
                 <>
                   <style.Nav.Link as={Link} to="/about">
@@ -41,9 +41,12 @@ function CustomNavbar() {
                     <FontAwesomeIcon icon={icon.faFilePdf} /> Resumes
                   </style.Nav.Link>
 
-                  <style.NavDropdown title={<span>Settings <FontAwesomeIcon icon={icon.faCog} /></span>} id="navbarScrollingDropdown" >
+                  <style.NavDropdown title={<span>Settings <FontAwesomeIcon icon={icon.faCog} /></span>} id="navbarScrollingDropdown">
                     <style.NavDropdown.Item as={Link} to="/profile">
                       <FontAwesomeIcon icon={icon.faUser} /> Profile
+                    </style.NavDropdown.Item>
+                    <style.NavDropdown.Item as={Link} to="/resumes/my-resume">
+                      <FontAwesomeIcon icon={icon.faFileAlt} /> My Resume
                     </style.NavDropdown.Item>
                     <style.NavDropdown.Item as={Link} to="/logout">
                       <FontAwesomeIcon icon={icon.faSignOutAlt} /> Logout
