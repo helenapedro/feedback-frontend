@@ -87,7 +87,7 @@ export async function fetchResumeVersions(resumeId: string): Promise<ResumeVersi
 }
 
 export const deleteResume = async (id: string) => {
-  const response = await axios.delete(`${API_URL}/api/resumes/${id}`, {
+  const response = await axios.delete(`${API_URL}/api/resumes`, {
     headers: { ...getAuthHeaders() },
   });
   return response.data;
